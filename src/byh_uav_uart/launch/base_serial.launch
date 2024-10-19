@@ -1,0 +1,10 @@
+<launch>
+  <!-- 打开节点 byh_uav_uart -->
+  <arg name="uart_port_name"          default="/dev/ttyTHS0"/> 
+  <arg name="serial_baud_rate_uart"   default="3000000"/> 
+ 
+  <node pkg="byh_uav_uart" type="byh_uav_uart" name="byh_uav_uart" output="screen"/>
+    <param name="uart_port_name"     type="string"      value="$(arg uart_port_name)"/>  
+    <param name="serial_baud_rate"   type="int"         value="$(arg serial_baud_rate_uart)"/>
+
+</launch>

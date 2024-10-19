@@ -1,0 +1,9 @@
+<launch>
+  <!-- 打开节点 byh_uav_usb -->
+  <arg name="usb_port_name"           default="/dev/ttyACM0"/> 
+  <arg name="serial_baud_rate_usb"    default="10000000"/> 
+
+  <node pkg="byh_uav_usb" type="byh_uav_usb" name="byh_uav_usb" output="screen"/>
+    <param name="usb_port_name"      type="string"      value="$(arg usb_port_name)"/>  
+    <param name="serial_baud_rate"   type="int"         value="$(arg serial_baud_rate_usb)"/>
+</launch>

@@ -432,6 +432,13 @@ class robot
          */        
 		void thread_process(int id);  
 
+		 /** 
+         * @author WeiXuan
+         * @brief 控制核心函数
+         * @returns 
+         */        
+		void Control();  
+
 	private:
         // 创建ROS节点句柄
 		ros::NodeHandle private_nh; 

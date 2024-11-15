@@ -28,15 +28,56 @@ int main(int argc, char** argv)
 
     // 实例化一个对象
     robot byhuav;
-
     ROS_INFO_STREAM("Welcome to BYH_UAV_ETH!");
+    
+    // 循环执行数据采集和发布话题等操作
+    byhuav.Control(); 
 
-    while(ros::ok())
-    {
-        ros::spinOnce();
-    }
     return 0;  
 } 
+
+/** 
+ * @author WeiXuan
+ * @brief 循环获取下位机数据与发布话题
+ * @returns 
+ */
+void robot::Control()
+{
+    while(ros::ok())
+    {
+        // 接受端口数据
+        if ((clientSocket = accept(serverSocket, (struct sockaddr *)&clientAddr, &addrLen)) < 0)
+        { 
+            perror("Accepting error");
+        }
+        while (true) 
+        {
+            uint64_t bytesRead = recv(clientSocket, buffer, 1, 0);
+            if (bytesRead < 0)
+            {
+                perror("Receiving error");
+                break;
+                
+            }
+            else if (bytesRead == 0)
+            {
+                break;
+            }
+            else
+            {
+                std::vector<char> bufferData(buffer, buffer + bytesRead);
+                if (bufferData.size() > 0)
+                {
+                    for(uint64_t i = 0; i < bufferData.size(); ++i)
+                    {
+                        Get_Sensor_Data( bufferData[i] );
+                    }
+                }
+            }
+        }
+        ros::spinOnce();
+    }
+}
 
 /** 
  * @author WeiXuan
@@ -1091,11 +1132,6 @@ robot::robot():Power_voltage(0)
         }
         ROS_INFO_STREAM("BYH_ETH start listening on port!");
     /* 开启监听 */
-
-    running = true;
-    mission_process = std::thread(&robot::thread_process, this, 1);
-    mission_receieve = std::thread(&robot::thread_receieve, this, 2);
-
 }
 
 /** 

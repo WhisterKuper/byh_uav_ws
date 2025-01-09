@@ -1,21 +1,21 @@
 <launch>
   <!-- 打开节点 byh_uav_usb -->
-  <!-- <arg name="usb_port_name"           default="/dev/ttyACM0"/>  -->
-  <!-- <arg name="serial_baud_rate_usb"    default="460800"/>  -->
+  <arg name="usb_port_name"           default="/dev/ttyACM0"/> 
+  <arg name="serial_baud_rate_usb"    default="3000000"/> 
 
   <!-- 打开节点 byh_uav_uart -->
   <!-- <arg name="uart_port_name"          default="/dev/ttyTHS0"/>  -->
   <!-- <arg name="serial_baud_rate_uart"   default="921600"/>  -->
 
   <!-- 打开节点 byh_uav_eth -->
-  <node pkg="byh_uav_eth" type="byh_uav_eth" name="byh_uav_eth" output="screen"/>
+  <!-- <node pkg="byh_uav_eth" type="byh_uav_eth" name="byh_uav_eth" output="screen"/> -->
  
   <!-- 打开节点 byh_uav_record -->
   <!-- <arg name="direction"               default="/home/kuper/Ros/byh_uav_ws/src/byh_uav_record/data"/>  -->
 
-  <!-- <node pkg="byh_uav_usb" type="byh_uav_usb" name="byh_uav_usb" output="screen"/> -->
-    <!-- <param name="usb_port_name"      type="string"      value="$(arg usb_port_name)"/>   -->
-    <!-- <param name="usb_baud_rate"      type="int"         value="$(arg serial_baud_rate_usb)"/> -->
+  <node pkg="byh_uav_usb" type="byh_uav_usb" name="byh_uav_usb" output="screen"/>
+    <param name="usb_port_name"      type="string"      value="$(arg usb_port_name)"/>  
+    <param name="usb_baud_rate"      type="int"         value="$(arg serial_baud_rate_usb)"/>
  
   <!-- <node pkg="byh_uav_uart" type="byh_uav_uart" name="byh_uav_uart" output="screen"/> -->
     <!-- <param name="uart_port_name"     type="string"      value="$(arg uart_port_name)"/>   -->

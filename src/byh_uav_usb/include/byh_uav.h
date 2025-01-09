@@ -100,6 +100,7 @@ using namespace std;
 
 	// 命令名称
 	#define NAME_ACQUSITION			0X01
+	#define NAME_GET_COMMAND		0X02
 	
 	// 采集命令
 	#define START					0X01
@@ -483,6 +484,13 @@ class robot
          * @returns 
          */        
         unsigned char Check_Sum(unsigned char count_number, unsigned char mode, uint8_t* buffer); 
+
+		/** 
+		 * @author WeiXuan
+		 * @brief 命令发送
+		 * @returns 
+		 */
+		void Command_Send( uint8_t command, uint8_t name_command );
 };
 
 #endif

@@ -6,6 +6,7 @@ sleep 1;
 sudo ifconfig eth0 192.168.1.50
 sudo ifconfig eth1 192.168.0.144
 sudo chmod 777 /dev/ttyTHS0
+sudo chmod 777 /dev/ttyACM0
 
 sleep 1;
 

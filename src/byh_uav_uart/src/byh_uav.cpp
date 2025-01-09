@@ -11,6 +11,8 @@ byh_uav::uav_gps ZEDF9P;
 byh_uav::uav_frequence D435i;
 byh_uav::uav_command Command;
 
+bool first = true;
+
 /** 
  * @author WeiXuan
  * @brief 主函数
@@ -366,9 +368,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)ADIS16470.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] ADIS16470: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ADIS16470.count - 1, ADIS16470.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] ADIS16470: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ADIS16470.count - 1, ADIS16470.count);
+
+                                if(first == true)
+                                    first = false;
                             }
                             
                             ADIS16470.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ADIS16470.gyro_mcu_time;
@@ -406,9 +413,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)ICM42688.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] ICM42688: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ICM42688.count - 1, ICM42688.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] ICM42688: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ICM42688.count - 1, ICM42688.count);
+
+                                if(first == true)
+                                    first = false;
                             }
 
                             ICM42688.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ICM42688.gyro_mcu_time;
@@ -446,9 +458,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)BMI088.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] BMI088: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - BMI088.count - 1, BMI088.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] BMI088: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - BMI088.count - 1, BMI088.count);
+                                
+                                if(first == true)
+                                    first = false;
                             }
 
                             BMI088.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - BMI088.gyro_mcu_time;
@@ -543,9 +560,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)RM3100.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] RM3100: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - RM3100.count - 1, RM3100.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] RM3100: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - RM3100.count - 1, RM3100.count);
+
+                                if(first == true)
+                                    first = false;
                             }
 
                             RM3100.sample_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001 - RM3100.magnet_mcu_time;
@@ -575,9 +597,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)AK8975.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] AK8975: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - AK8975.count - 1, AK8975.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] AK8975: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - AK8975.count - 1, AK8975.count);
+
+                                if(first == true)
+                                    first = false;
                             }
                             
                             AK8975.sample_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001 - AK8975.magnet_mcu_time;
@@ -702,9 +729,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)ZEDF9P.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] ZEDF9P: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ZEDF9P.count - 1, ZEDF9P.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] ZEDF9P: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ZEDF9P.count - 1, ZEDF9P.count);
+
+                                if(first == true)
+                                    first = false;
                             }
 
                             ZEDF9P.name = "ZEDF9P";
@@ -779,9 +811,13 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)D435i.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] D435i: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - D435i.count - 1, D435i.count);
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] D435i: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - D435i.count - 1, D435i.count);
+
+                                if(first == true)
+                                    first = false;
                             }
                             D435i.name = "D435i";
                             D435i.header.stamp = ros::Time::now(); 
@@ -851,9 +887,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)MS5611.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] MS5611: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - MS5611.count - 1, MS5611.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] MS5611: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - MS5611.count - 1, MS5611.count);
+                                
+                                if(first == true)
+                                    first = false;
                             }
 
                             MS5611.name = "MS5611";
@@ -899,9 +940,14 @@ bool robot::Get_Sensor_Data()
                                 // 错误过多
                                 if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)Command.count, MAX_LOST_COUNT )) != true )
                                 {
-                                    return false;
+                                    // return false;
                                 }
-                                ROS_WARN("[Lost_Count] Command: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - Command.count - 1, Command.count);
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] Command: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - Command.count - 1, Command.count);
+
+                                if(first == true)
+                                    first = false;
                             }
                             
                             Command.name = "Acqusition";

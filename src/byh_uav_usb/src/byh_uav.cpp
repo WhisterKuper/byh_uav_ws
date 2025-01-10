@@ -175,19 +175,38 @@ bool robot::Get_Sensor_Data()
     {
         case rx_frame_header:
         {
-            if( (data[0] == FRAME_HEADER1) && (count==0) )
+            if( (data[0] == FRAME_HEADER1) && (count == 0) )
             {
-                Receive_Data.rx[count] = data[0];
-                count++;
+                 if( count == 0)
+                {
+                    Receive_Data.rx[count] = data[0];
+                    count++;
+                }
+                else 
+                {
+                    ROS_ERROR("State:count!=0");
+                    count = 0;
+                }
             }
-            else if( (data[0] == FRAME_HEADER2) && (count==1) )
+            else if( (data[0] == FRAME_HEADER2) && (count == 1) )
             {
-                Receive_Data.rx[count] = data[0];
-                count++;
-                state = rx_length;
+                if(count == 1)
+                {
+                    Receive_Data.rx[count] = data[0];
+                    count++;
+                    state = rx_length;
+                }
+                else 
+                {
+                    ROS_ERROR("State:count!=1");
+                    count = 0;
+                }
             }
             else
+            {
+                ROS_ERROR("State:default");
                 count=0;
+            }
             break;
         }   
 
@@ -214,6 +233,7 @@ bool robot::Get_Sensor_Data()
                 {
                     length = 0;
                     state = rx_frame_header;
+                    ROS_ERROR("State:rx_length");
                     count = 0;
                 }
                 else
@@ -241,6 +261,7 @@ bool robot::Get_Sensor_Data()
                 else 
                 {
                     count=0;
+                    ROS_ERROR("State:rx_calib");
                     state = rx_frame_header;
                 }
             }
@@ -370,7 +391,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] ADIS16470: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ADIS16470.count - 1, ADIS16470.count);
 
@@ -395,8 +415,8 @@ bool robot::Get_Sensor_Data()
                             ADIS16470.angular_velocity.y = Receive_Data.imu.gyro_data_y * GYROSCOPE_ADIS16470_RATIO;
                             ADIS16470.angular_velocity.z = Receive_Data.imu.gyro_data_z * GYROSCOPE_ADIS16470_RATIO;
                             ADIS16470.orientation = Quaternion(ADIS16470.angular_velocity.x, ADIS16470.angular_velocity.y, ADIS16470.angular_velocity.z,
-                                       ADIS16470.linear_acceleration.x, ADIS16470.linear_acceleration.y, ADIS16470.linear_acceleration.z, 
-                                       ADIS16470.sample_time);
+                                    ADIS16470.linear_acceleration.x, ADIS16470.linear_acceleration.y, ADIS16470.linear_acceleration.z, 
+                                    ADIS16470.sample_time);
                             ADIS16470_publisher.publish(ADIS16470);
                         }
                         // ICM42688
@@ -440,8 +460,8 @@ bool robot::Get_Sensor_Data()
                             ICM42688.angular_velocity.y = Receive_Data.imu.gyro_data_y * GYROSCOPE_ICM42688_RATIO;
                             ICM42688.angular_velocity.z = Receive_Data.imu.gyro_data_z * GYROSCOPE_ICM42688_RATIO;
                             ICM42688.orientation = Quaternion(ICM42688.angular_velocity.x, ICM42688.angular_velocity.y, ICM42688.angular_velocity.z,
-                                       ICM42688.linear_acceleration.x, ICM42688.linear_acceleration.y, ICM42688.linear_acceleration.z, 
-                                       ICM42688.sample_time);
+                                    ICM42688.linear_acceleration.x, ICM42688.linear_acceleration.y, ICM42688.linear_acceleration.z, 
+                                    ICM42688.sample_time);
                             ICM42688_publisher.publish(ICM42688);
                         }
                         // BMI088
@@ -485,8 +505,8 @@ bool robot::Get_Sensor_Data()
                             BMI088.angular_velocity.y = Receive_Data.imu.gyro_data_y * GYROSCOPE_BMI088_RATIO;
                             BMI088.angular_velocity.z = Receive_Data.imu.gyro_data_z * GYROSCOPE_BMI088_RATIO;
                             BMI088.orientation = Quaternion(BMI088.angular_velocity.x, BMI088.angular_velocity.y, BMI088.angular_velocity.z,
-                                       BMI088.linear_acceleration.x, BMI088.linear_acceleration.y, BMI088.linear_acceleration.z, 
-                                       BMI088.sample_time);
+                                    BMI088.linear_acceleration.x, BMI088.linear_acceleration.y, BMI088.linear_acceleration.z, 
+                                    BMI088.sample_time);
                             BMI088_publisher.publish(BMI088);
                         }
 
@@ -562,7 +582,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] RM3100: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - RM3100.count - 1, RM3100.count);
 
@@ -599,7 +618,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] AK8975: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - AK8975.count - 1, AK8975.count);
 
@@ -731,7 +749,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] ZEDF9P: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ZEDF9P.count - 1, ZEDF9P.count);
 
@@ -889,7 +906,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] MS5611: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - MS5611.count - 1, MS5611.count);
                                 
@@ -942,7 +958,6 @@ bool robot::Get_Sensor_Data()
                                 {
                                     // return false;
                                 }
-
                                 if(first == false)
                                     ROS_WARN("[Lost_Count] Command: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - Command.count - 1, Command.count);
 
@@ -969,6 +984,7 @@ bool robot::Get_Sensor_Data()
                 {
                     count = 0;
                     length = 0;
+                    ROS_ERROR("State:rx_data");
                     state = rx_frame_header;
                     return false;
                 }
@@ -978,6 +994,7 @@ bool robot::Get_Sensor_Data()
         
         default:
         {
+            ROS_ERROR("State:default");
             state = rx_frame_header;
             length = 0;
             count = 0;

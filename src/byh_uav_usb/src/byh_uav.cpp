@@ -204,7 +204,6 @@ bool robot::Get_Sensor_Data()
             }
             else
             {
-                ROS_ERROR("State:default");
                 count=0;
             }
             break;

@@ -58,5 +58,29 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "iomanip": "cpp"
-  }
+  },
+  "python.autoComplete.extraPaths": [
+    "/home/kuper/Ros/byh_uav_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/spinnaker_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/livox_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/cartographer_ws/install_isolated/lib/python3/dist-packages",
+    "/home/kuper/Ros/oak_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/whucam_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/whudrones_ws/devel/lib/python3/dist-packages",
+    "/opt/ros/noetic/lib/python3/dist-packages",
+    "/home/kuper/Ros/acfly_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/catkin_ws/devel/lib/python3/dist-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/home/kuper/Ros/byh_uav_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/spinnaker_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/livox_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/cartographer_ws/install_isolated/lib/python3/dist-packages",
+    "/home/kuper/Ros/oak_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/whucam_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/whudrones_ws/devel/lib/python3/dist-packages",
+    "/opt/ros/noetic/lib/python3/dist-packages",
+    "/home/kuper/Ros/acfly_ws/devel/lib/python3/dist-packages",
+    "/home/kuper/Ros/catkin_ws/devel/lib/python3/dist-packages"
+  ]
 }

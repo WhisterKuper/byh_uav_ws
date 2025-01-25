@@ -74,8 +74,8 @@ void robot::Control()
                     }
                 }
             }
+            ros::spinOnce();
         }
-        ros::spinOnce();
     }
 }
 
@@ -1040,7 +1040,78 @@ void robot::thread_receieve(int id)
  */        
 void robot::Cmd_Frequence_Callback(const byh_uav::uav_cmd_frequence::ConstPtr &cmd_frequence)
 {
+    static uint32_t Command_count_H;
+    static uint32_t Command_count_L;
 
+    Frequence_Command_Data Send_buffer;
+    uint8_t* buffer = (uint8_t*) &Send_buffer;
+
+    // 帧头
+    Send_buffer.frame_header1 = FRAME_HEADER1;
+    Send_buffer.frame_header2 = FRAME_HEADER2;
+
+    // 帧长度
+    M_UINT32.U32 = sizeof(Frequence_Command_Data);
+    Send_buffer.length[0] = M_UINT32.B4[3];
+    Send_buffer.length[1] = M_UINT32.B4[2];
+    Send_buffer.length[2] = M_UINT32.B4[1];
+    Send_buffer.length[3] = M_UINT32.B4[0];
+
+    // 帧头校验
+    Send_buffer.calib[0] = Check_Sum(6, SEND_DATA_CHECK, buffer);
+    Send_buffer.calib[1] = Check_Sum(7, SEND_DATA_CHECK, buffer);
+
+    // 低位计数
+    M_UINT32.U32 = Command_count_L;
+    Send_buffer.count1[0] = M_UINT32.B4[3];
+    Send_buffer.count1[1] = M_UINT32.B4[2];
+    Send_buffer.count1[2] = M_UINT32.B4[1];
+    Send_buffer.count1[3] = M_UINT32.B4[0];
+
+    // 高位计数
+    M_UINT32.U32 = Command_count_H;
+    Send_buffer.count2[0] = M_UINT32.B4[3];
+    Send_buffer.count2[1] = M_UINT32.B4[2];
+    Send_buffer.count2[2] = M_UINT32.B4[1];
+    Send_buffer.count2[3] = M_UINT32.B4[0];
+
+    // 数据类型
+    Send_buffer.type = TYPE_COMMAND;
+    Send_buffer.name = NAME_CHANGE_FREQUENCE;
+        
+    // 数据
+    M_UINT16.U16 = cmd_frequence->channel;
+    Send_buffer.channel[0] = M_UINT16.B2[0];
+    Send_buffer.channel[1] = M_UINT16.B2[1];
+    M_UINT16.U16 = cmd_frequence->frequence;
+    Send_buffer.frequence[0] = M_UINT16.B2[0];
+    Send_buffer.frequence[1] = M_UINT16.B2[1];
+
+    // 校验码
+    Send_buffer.crc_calib = Check_Sum(sizeof(Send_buffer)-2, SEND_DATA_CHECK, buffer);
+    // 帧尾
+    Send_buffer.frame_tail = FRAME_TAIL;
+
+    // 计数
+    if(Command_count_L == 4294967295)
+    {
+        Command_count_H++;
+        Command_count_L = 0;
+    }
+    else
+        Command_count_L++;
+
+    // 发送数据
+    int64_t bytesSend = write(clientSocket, buffer, sizeof(Frequence_Command_Data));
+    if (bytesSend < 0)
+    {
+        ROS_ERROR("Send error");
+    }
+    else
+    {
+        // ROS_INFO("Send data: %ld", bytesSend);
+    }
+    
 }
 
 /** 

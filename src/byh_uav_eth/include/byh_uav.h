@@ -117,6 +117,7 @@ using namespace std;
 
 	// 命令名称
 	#define NAME_ACQUSITION			0X01
+	#define NAME_CHANGE_FREQUENCE	0X02
 	
 	// 采集命令
 	#define START					0X01
@@ -338,6 +339,27 @@ using namespace std;
 		uint8_t	crc_calib; 							// 校验码
 		uint8_t	frame_tail; 						// 帧尾
 	};
+
+	// 频率数据包
+	struct Frequence_Command_Data
+	{
+		uint8_t	frame_header1; 						// 帧头
+		uint8_t	frame_header2; 						// 帧头
+		uint8_t length[4];							// 帧长度
+		uint8_t calib[2];							// 帧头校验
+		
+		uint8_t count1[4];							// 帧ID
+		uint8_t count2[4];							// 帧ID
+		
+		uint8_t type;								// 数据包类型
+		uint8_t name;								// 名称
+		uint8_t channel[2];							// 通道号
+		uint8_t frequence[2];							// 通道号
+
+		uint8_t	crc_calib; 							// 校验码
+		uint8_t	frame_tail; 						// 帧尾
+	};
+
 
 	// 使用同一存储空间，长度8个字节，高位在前，低位在后
 	union         

@@ -13,7 +13,7 @@ sleep 1;
 # 开启ptp主时钟同步
 gnome-terminal --tab --title="ptp同步" -- zsh -c "sudo ptp4l -m -S -l 6 -i eth0; exec zsh" && 
 # BYHUAV 开启
-gnome-terminal --tab --title="BYHUAV" -- zsh -c "ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && source ~/Ros/byh_uav_ws/devel/setup.zsh && roslaunch byh_uav base_serial.launch; exec zsh" && 
+gnome-terminal --tab --title="BYHUAV" -- zsh -c "ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && source ~/Ros/byh_uav_ws/devel/setup.zsh && roslaunch byh_uav byh_uav.launch; exec zsh" && 
 sleep 1 &&
 # PPS同步 开启
 gnome-terminal --tab --title="PPS同步" -- zsh -c "sudo -u root zsh -c \" ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && source /home/kuper/Ros/byh_uav_ws/devel/setup.zsh  && rosrun byh_uav_pps byh_uav_pps /dev/pps1 \"; exec zsh" && 

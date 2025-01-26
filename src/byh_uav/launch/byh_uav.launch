@@ -1,0 +1,32 @@
+<launch>
+  <!-- uart 配置 -->
+    <!-- USB -->
+    <!-- <arg name="uart_port_name"          default="/dev/ttyACM0"/>  -->
+    <!-- TELEM1 -->
+    <arg name="uart_port_name"          default="/dev/ttyTHS0"/> 
+  <arg name="uart_baud_rate"          default="921600"/> 
+
+  <!-- 以太网配置 -->
+  <arg name="eth_ip"                  default="null"/> 
+  <arg name="eth_port"                default="5001"/> 
+
+  <!-- 使用接口配置：1 为串口; 0 为以太网，默认为以太网-->
+  <arg name="use_way"                 default="1"/> 
+  <!-- 使用线程：true 为使用 -->
+  <arg name="use_thread"              default="true"/> 
+
+  <!-- 打开节点 byh_uav -->
+  <node pkg="byh_uav_all" type="byh_uav_all" name="byh_uav_all" output="screen"/>
+    <param name="uart_port_name"       type="string"      value="$(arg uart_port_name)"/>  
+    <param name="uart_baud_rate"       type="int"         value="$(arg uart_baud_rate)"/>
+    <param name="eth_ip"              type="string"       value="$(arg eth_ip)"/>  
+    <param name="eth_port"            type="int"          value="$(arg eth_port)"/>
+    <param name="use_thread"          type="bool"         value="$(arg use_thread)"/>  
+    <param name="use_way"             type="int"          value="$(arg use_way)"/>
+ 
+  <!-- 打开节点 byh_uav_record -->
+  <!-- <arg name="direction"               default="/home/kuper/Ros/byh_uav_ws/src/byh_uav_record/data"/>  -->
+
+  <!-- <node pkg="byh_uav_record" type="byh_uav_record" name="byh_uav_record" output="screen"/> -->
+    <!-- <param name="direction"     type="string"      value="$(arg direction)"/>   -->
+</launch>

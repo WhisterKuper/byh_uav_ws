@@ -76,11 +76,13 @@ using namespace std;
 // 与IMU陀螺仪设置的量程有关
 #define GYROSCOPE_BMI088_RATIO      0.00106526443603169529841533860381f
 #define GYROSCOPE_ADIS16470_RATIO   2.6631610900792382460383465095346e-8
+#define GYROSCOPE_ADIS16465_RATIO   2.6631610900792382460383465095346e-8
 #define GYROSCOPE_ICM42688_RATIO    0.00013315805450396191230191732547673f
 
 // 与IMU加速度计设置的量程有关
 #define ACCEl_BMI088_RATIO 	        9.80665 / 1365
 #define ACCEl_ADIS16470_RATIO 	    9.80665 / 52428800.0
+#define ACCEl_ADIS16465_RATIO 	    9.80665 / 52428800.0
 #define ACCEl_ICM42688_RATIO 	    9.80665 / 8192
 
 // 与IMU磁力计设置的量程有关
@@ -115,6 +117,8 @@ using namespace std;
 	#define NAME_ZEDF9P 			0X09
 	#define NAME_D435I 				0X10
 	#define NAME_OAK				0X11
+	#define NAME_ADIS16465 			0X12
+	#define NAME_BMP581 			0X13
 
 	// 命令名称
 	#define NAME_ACQUSITION			0X01
@@ -356,7 +360,7 @@ using namespace std;
 		uint8_t type;								// 数据包类型
 		uint8_t name;								// 名称
 		uint8_t channel[2];							// 通道号
-		uint8_t frequence[2];							// 通道号
+		uint8_t frequence[2];						// 通道号
 
 		uint8_t	crc_calib; 							// 校验码
 		uint8_t	frame_tail; 						// 帧尾
@@ -518,6 +522,7 @@ class robot
         ros::Publisher BMI088_publisher;
         ros::Publisher ADIS16470_publisher;
         ros::Publisher ICM42688_publisher;
+        ros::Publisher ADIS16465_publisher;
 
         // 磁力计数据发布者
         ros::Publisher AK8975_publisher;
@@ -525,6 +530,8 @@ class robot
 
         // 气压计数据发布者
         ros::Publisher MS5611_publisher;
+        ros::Publisher BMP581_publisher;
+        ros::Publisher SPL06_publisher;
 
         // GPS话题发布者
 		ros::Publisher ZEDF9P_publisher; 

@@ -3,10 +3,13 @@
 
 byh_uav::uav_imu BMI088;
 byh_uav::uav_imu ADIS16470;
+byh_uav::uav_imu ADIS16465;
 byh_uav::uav_imu ICM42688;
 byh_uav::uav_magnet RM3100;
 byh_uav::uav_magnet AK8975;
 byh_uav::uav_barometer MS5611;
+byh_uav::uav_barometer BMP581;
+byh_uav::uav_barometer SPL06;
 byh_uav::uav_gps ZEDF9P;
 byh_uav::uav_frequence D435i;
 byh_uav::uav_command Command;
@@ -582,6 +585,51 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                        BMI088.sample_time);
                             BMI088_publisher.publish(BMI088);
                         }
+                        // ADIS16465
+                        else if( data_imu->name == NAME_ADIS16465 )
+                        {
+                            // 收到以前的数据
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)ADIS16465.count && ADIS16465.count !=0 )
+                            {
+                                return false;
+                            }
+
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)ADIS16465.count + 1 && ADIS16465.count !=0 )
+                            {
+                                // 错误过多
+                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)ADIS16465.count, MAX_LOST_COUNT )) != true )
+                                {
+                                    // return false;
+                                }
+
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] ADIS16465: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - ADIS16465.count - 1, ADIS16465.count);
+
+                                if(first == true)
+                                    first = false;
+                            }
+
+                            ADIS16465.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ADIS16465.gyro_mcu_time;
+                            ADIS16465.name = "ADIS16465";
+                            ADIS16465.header.stamp = ros::Time::now(); 
+                            ADIS16465.header.frame_id = frame_id; 
+                            ADIS16465.number = data_imu->number;
+                            ADIS16465.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
+                            ADIS16465.accel_gps_time = Receive_Data.imu.accel_gps_time/10000000000 + Receive_Data.imu.accel_gps_time%10000000000*0.0000000001;
+                            ADIS16465.accel_mcu_time = Receive_Data.imu.accel_mcu_time/10000000000 + Receive_Data.imu.accel_mcu_time%10000000000*0.0000000001;
+                            ADIS16465.gyro_gps_time = Receive_Data.imu.gyro_gps_time/10000000000 + Receive_Data.imu.gyro_gps_time%10000000000*0.0000000001;
+                            ADIS16465.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001;
+                            ADIS16465.linear_acceleration.x = Receive_Data.imu.accel_data_x * ACCEl_ADIS16465_RATIO;
+                            ADIS16465.linear_acceleration.y = Receive_Data.imu.accel_data_y * ACCEl_ADIS16465_RATIO;
+                            ADIS16465.linear_acceleration.z = Receive_Data.imu.accel_data_z * ACCEl_ADIS16465_RATIO;
+                            ADIS16465.angular_velocity.x = Receive_Data.imu.gyro_data_x * GYROSCOPE_ADIS16465_RATIO;
+                            ADIS16465.angular_velocity.y = Receive_Data.imu.gyro_data_y * GYROSCOPE_ADIS16465_RATIO;
+                            ADIS16465.angular_velocity.z = Receive_Data.imu.gyro_data_z * GYROSCOPE_ADIS16465_RATIO;
+                            ADIS16465.orientation = Quaternion(ADIS16465.angular_velocity.x, ADIS16465.angular_velocity.y, ADIS16465.angular_velocity.z,
+                                       ADIS16465.linear_acceleration.x, ADIS16465.linear_acceleration.y, ADIS16465.linear_acceleration.z, 
+                                       ADIS16465.sample_time);
+                            ADIS16465_publisher.publish(ADIS16465);
+                        }
 
                         return true;
                     }
@@ -996,6 +1044,72 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             MS5611.height = Receive_Data.barometer.height;
                             MS5611_publisher.publish(MS5611);
                         }
+                        // SPL06
+                        else if( data_barometer->name == NAME_SPL06 )
+                        {
+                            // 收到以前的数据
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)SPL06.count && SPL06.count !=0 )
+                            {
+                                return false;
+                            }
+
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)SPL06.count + 1 && SPL06.count !=0 )
+                            {
+                                // 错误过多
+                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)SPL06.count, MAX_LOST_COUNT )) != true )
+                                {
+                                    // return false;
+                                }
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] SPL06: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - SPL06.count - 1, SPL06.count);
+
+                                if(first == true)
+                                    first = false;
+                            }
+
+                            SPL06.name = "SPL06";
+                            SPL06.header.stamp = ros::Time::now(); 
+                            SPL06.header.frame_id = frame_id; 
+                            SPL06.number = data_barometer->number;
+                            SPL06.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
+                            SPL06.data_gps_time = Receive_Data.barometer.data_gps_time/10000000000 + Receive_Data.barometer.data_gps_time%10000000000*0.0000000001;
+                            SPL06.data_mcu_time = Receive_Data.barometer.data_mcu_time/10000000000 + Receive_Data.barometer.data_mcu_time%10000000000*0.0000000001;
+                            SPL06.height = Receive_Data.barometer.height;
+                            SPL06_publisher.publish(SPL06);
+                        }
+                        // BMP581
+                        else if( data_barometer->name == NAME_BMP581 )
+                        {
+                            // 收到以前的数据
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)BMP581.count && BMP581.count !=0 )
+                            {
+                                return false;
+                            }
+
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)BMP581.count + 1 && BMP581.count !=0 )
+                            {
+                                // 错误过多
+                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)BMP581.count, MAX_LOST_COUNT )) != true )
+                                {
+                                    // return false;
+                                }
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] BMP581: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - BMP581.count - 1, BMP581.count);
+
+                                if(first == true)
+                                    first = false;
+                            }
+
+                            BMP581.name = "BMP581";
+                            BMP581.header.stamp = ros::Time::now(); 
+                            BMP581.header.frame_id = frame_id; 
+                            BMP581.number = data_barometer->number;
+                            BMP581.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
+                            BMP581.data_gps_time = Receive_Data.barometer.data_gps_time/10000000000 + Receive_Data.barometer.data_gps_time%10000000000*0.0000000001;
+                            BMP581.data_mcu_time = Receive_Data.barometer.data_mcu_time/10000000000 + Receive_Data.barometer.data_mcu_time%10000000000*0.0000000001;
+                            BMP581.height = Receive_Data.barometer.height;
+                            BMP581_publisher.publish(BMP581);
+                        }
                     }
 
                     // 命令数据包
@@ -1316,6 +1430,7 @@ robot::robot():Power_voltage(0)
     BMI088_publisher = private_nh.advertise<byh_uav::uav_imu>("byh_uav/BMI088", 20); 
     ADIS16470_publisher = private_nh.advertise<byh_uav::uav_imu>("byh_uav/ADIS16470", 20); 
     ICM42688_publisher = private_nh.advertise<byh_uav::uav_imu>("byh_uav/ICM42688", 20); 
+    ADIS16465_publisher = private_nh.advertise<byh_uav::uav_imu>("byh_uav/ADIS16465", 20); 
 
     // 创建磁力计话题发布者
     AK8975_publisher = private_nh.advertise<byh_uav::uav_magnet>("byh_uav/AK8975", 20); 
@@ -1323,6 +1438,8 @@ robot::robot():Power_voltage(0)
 
     // 创建气压计话题发布者
     MS5611_publisher = private_nh.advertise<byh_uav::uav_barometer>("byh_uav/MS5611", 20);
+    SPL06_publisher = private_nh.advertise<byh_uav::uav_barometer>("byh_uav/SPL06", 20);
+    BMP581_publisher = private_nh.advertise<byh_uav::uav_barometer>("byh_uav/BMP581", 20);
 
     // 创建GPS话题发布者
     ZEDF9P_publisher = private_nh.advertise<byh_uav::uav_gps>("byh_uav/ZEDF9P", 20);

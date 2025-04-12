@@ -3,8 +3,8 @@ sleep 1;
 source /opt/ros/noetic/setup.zsh
 
 sleep 1;
-sudo ifconfig eth1 192.168.1.50
-sudo ifconfig eth0 192.168.0.144
+sudo ifconfig eth0 192.168.1.50
+sudo ifconfig eth1 192.168.0.144
 sudo chmod 777 /dev/ttyTHS0
 sudo chmod 777 /dev/ttyACM0
 
@@ -25,11 +25,14 @@ gnome-terminal --tab --title="PPS同步" -- zsh -c "sudo -u root zsh -c \" ulimi
 # gnome-terminal --tab --title="ARS548" -- zsh -c "sudo -u root zsh -c \" ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && sudo ifconfig eth0 192.168.1.50 && source /home/kuper/Ros/ars548_ws/devel/setup.zsh && roslaunch ars540_msgs ars540.launch  \"; exec zsh" && 
 # FLIR 开启
 # gnome-terminal --tab --title="FLIR" -- zsh -c "roslaunch spinnaker_sdk_camera_driver acquisition.launch; exec zsh" && 
-# 输出信息
+# 输出信息 
+gnome-terminal --tab --title="BMI088" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/BMI088 ; exec zsh" &&
+gnome-terminal --tab --title="AK8975" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/AK8975 ; exec zsh" &&
+gnome-terminal --tab --title="BMP581" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/BMP581 ; exec zsh" &&
 gnome-terminal --tab --title="ADIS16470" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/ADIS16470 ; exec zsh" && 
-gnome-terminal --tab --title="D435i" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/D435i ; exec zsh" && 
 gnome-terminal --tab --title="RM3100" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/RM3100 ; exec zsh" && 
 gnome-terminal --tab --title="ICM42688" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/ICM42688 ; exec zsh" &&
+# gnome-terminal --tab --title="D435i" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/D435i ; exec zsh" && 
 gnome-terminal --tab --title="ZEDF9P" -- zsh -c "source ~/Ros/byh_uav_ws/devel/setup.zsh && rostopic echo /byh_uav/ZEDF9P ; exec zsh"
 
 echo "ptp sync successfully started"

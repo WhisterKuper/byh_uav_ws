@@ -1,0 +1,49 @@
+<launch>
+  <!-- uart 配置 -->
+    <!-- USB -->
+    <!-- <arg name="uart_port_name"          default="/dev/ttyACM0"/>  -->
+    <!-- TELEM1 -->
+    <arg name="uart_port_name"          default="/dev/ttyTHS0"/> 
+    <!-- 波特率 -->
+    <arg name="uart_baud_rate"          default="921600"/> 
+  <!-- uart 配置 -->
+
+  <!-- ch348 配置 -->
+    <!-- ch348 -->
+    <arg name="ch348_port_name0"          default="ttyCH9344USB8"/> 
+    <arg name="ch348_port_name1"          default="ttyCH9344USB9"/> 
+    <arg name="ch348_port_name2"          default="ttyCH9344USB10"/> 
+    <arg name="ch348_port_name3"          default="ttyCH9344USB11"/> 
+    <arg name="ch348_port_name4"          default="ttyCH9344USB12"/> 
+    <arg name="ch348_port_name5"          default="ttyCH9344USB13"/> 
+    <arg name="ch348_port_name6"          default="ttyCH9344USB14"/> 
+    <arg name="ch348_port_name7"          default="ttyCH9344USB15"/> 
+    <!-- 波特率 -->
+    <arg name="ch348_baud_rate"          default="3000000"/> 
+  <!-- ch348 配置 -->
+
+  <!-- 以太网配置 -->
+    <arg name="eth_ip"                  default="null"/> 
+    <arg name="eth_port"                default="5001"/> 
+  <!-- 以太网配置 -->
+
+  <!-- 使用接口配置：1 为串口; 0 为以太网，默认为以太网-->
+  <arg name="use_way"                 default="0"/> 
+  <!-- 使用线程：true 为使用 -->
+  <arg name="use_thread"              default="false"/> 
+
+  <!-- 打开节点 byh_uav -->
+  <node pkg="byh_uav_all" type="byh_uav_all" name="byh_uav_all" output="screen"/>
+    <param name="uart_port_name"       type="string"      value="$(arg uart_port_name)"/>  
+    <param name="uart_baud_rate"       type="int"         value="$(arg uart_baud_rate)"/>
+    <param name="eth_ip"              type="string"       value="$(arg eth_ip)"/>  
+    <param name="eth_port"            type="int"          value="$(arg eth_port)"/>
+    <param name="use_thread"          type="bool"         value="$(arg use_thread)"/>  
+    <param name="use_way"             type="int"          value="$(arg use_way)"/>
+ 
+  <!-- 打开节点 byh_uav_record -->
+  <!-- <arg name="direction"               default="/home/kuper/Ros/byh_uav_ws/src/byh_uav_record/data"/>  -->
+
+  <!-- <node pkg="byh_uav_record" type="byh_uav_record" name="byh_uav_record" output="screen"/> -->
+    <!-- <param name="direction"     type="string"      value="$(arg direction)"/>   -->
+</launch>

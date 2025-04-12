@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
-# byh_uav
-project(byh_uav)
+# byh_uav_pps2
+project(byh_uav_pps2)
 
 # 依赖包
 find_package(catkin REQUIRED COMPONENTS
@@ -19,26 +19,17 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   serial
+  byh_uav
 )
 
-add_compile_options(-g -std=c++11)  
+add_compile_options(-g -std=c++11 )  
 
 # BOOST 库
 find_package(Boost REQUIRED COMPONENTS system)
 
-add_message_files(
-  FILES
-  uav_imu.msg
-  uav_gps.msg
-  uav_magnet.msg
-  uav_barometer.msg
-  uav_cmd_frequence.msg
-  uav_frequence.msg
-  uav_command.msg
-  uav_pps.msg
-  uav_fpga_time.msg
-  uav_pps_all.msg
-)
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 
 generate_messages(
   DEPENDENCIES
@@ -50,9 +41,14 @@ generate_messages(
 include_directories( 
   ${OpenCV_INCLUDE_DIRS} 
   ${catkin_INCLUDE_DIRS}
-  ~/Ros/byh_uav_ws/src/byh_uav/include
+  ~/Ros/byh_uav_ws/src/byh_uav_pps2/include
+  /usr/include/sys/
 )
 
 catkin_package(
   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime geometry_msgs
 )
+
+# 执行文件
+add_executable(byh_uav_pps2 src/byh_uav_pps.cpp)
+target_link_libraries(byh_uav_pps2 ${catkin_LIBRARIES} /usr/lib/aarch64-linux-gnu/libreadline.so)

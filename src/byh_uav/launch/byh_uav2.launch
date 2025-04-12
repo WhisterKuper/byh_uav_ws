@@ -33,7 +33,7 @@
   <arg name="use_thread"              default="false"/> 
 
   <!-- 打开节点 byh_uav -->
-  <node pkg="byh_uav_all" type="byh_uav_all" name="byh_uav_all" output="screen"/>
+  <node pkg="byh_uav_all2" type="byh_uav_all2" name="byh_uav_all2" output="screen"/>
     <param name="uart_port_name"       type="string"      value="$(arg uart_port_name)"/>  
     <param name="uart_baud_rate"       type="int"         value="$(arg uart_baud_rate)"/>
     <param name="eth_ip"              type="string"       value="$(arg eth_ip)"/>  

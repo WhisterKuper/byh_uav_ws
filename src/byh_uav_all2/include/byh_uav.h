@@ -54,6 +54,8 @@
 #include <byh_uav/uav_frequence.h>
 #include <byh_uav/uav_cmd_frequence.h>
 #include <byh_uav/uav_command.h>
+#include <byh_uav/uav_fpga_time.h>
+#include <cmath> 
 
 
 using namespace std;
@@ -94,21 +96,31 @@ using namespace std;
 
 /* 通信端口 */
 	// 帧头
-	#define FRAME_HEADER1           0X7B      
-	#define FRAME_HEADER2           0X55    
+	#define FRAME_HEADER1     	0X7B  
+	#define FRAME_HEADER2     	0X55      
 	// 帧尾
-	#define FRAME_TAIL              0X7D
+	#define FRAME_TAIL        	0X7D
 	// 数据类型
-	#define TYPE_IMU        	    0X01 
-	#define TYPE_MAGNET             0X02
-	#define TYPE_GPS       		    0X03
-	#define TYPE_CAMERA      		0X04
-	#define TYPE_BAROMETER     		0X05
-	#define TYPE_COMMAND     		0X06
+	#define TYPE_IMU        	0X01 
+	#define TYPE_MAGNET       	0X02
+	#define TYPE_GPS       		0X03
+	#define TYPE_CAMERA       	0X04
+	#define TYPE_BAROMETER    	0X05
+	#define TYPE_COMMAND      	0X06
+	#define TYPE_SATELLITE    	0X07
+	#define TYPE_STM_ID        	0X08 
+	#define TYPE_Get_STM_ID		0X09
+	#define TYPE_Set_STM_ID		0X10
+	#define TYPE_ACT_STM		0X11
+	#define TYPE_ENTER_DFU		0X12
+	#define TYPE_GET_COMMAND	0X13
+	#define TYPE_REBOOT			0X14
+	#define TYPE_FPGA       	0X15
+
 	// 名称
-	#define NAME_ADIS16470 		    0X01
-	#define NAME_ICM42688 		    0X02
-	#define NAME_ICM20689 		    0X03
+	#define NAME_ADIS16470 			0X01
+	#define NAME_ICM42688 			0X02
+	#define NAME_ICM20689 			0X03
 	#define NAME_BMI088 			0X04
 	#define NAME_RM3100 			0X05
 	#define NAME_AK8975 			0X06
@@ -116,14 +128,18 @@ using namespace std;
 	#define NAME_MS5611 			0X08
 	#define NAME_ZEDF9P 			0X09
 	#define NAME_D435I 				0X10
-	#define NAME_OAK				0X11
+	#define NAME_OAK 				0X11
 	#define NAME_ADIS16465 			0X12
 	#define NAME_BMP581 			0X13
-
+	
 	// 命令名称
-	#define NAME_ACQUSITION			0X01
+	#define NAME_ACQUSITION 		0X01
 	#define NAME_CHANGE_FREQUENCE	0X02
 	#define NAME_GET_COMMAND		0X03
+	#define NAME_AUX_CHANNEL		0X04
+
+	// FPGA 时间名称
+	#define NAME_PPS_FPGA_TIME		0X01
 	
 	// 采集命令
 	#define START					0X01
@@ -132,10 +148,10 @@ using namespace std;
 	// IMU数据包
 	struct IMU_Sensors
 	{
-		uint64_t accel_gps_time;
-		uint64_t accel_mcu_time;
-		uint64_t gyro_gps_time;
-		uint64_t gyro_mcu_time;
+		double accel_gps_time;
+		double accel_mcu_time;
+		double gyro_gps_time;
+		double gyro_mcu_time;
 		int32_t accel_data_x;
 		int32_t accel_data_y;
 		int32_t accel_data_z;
@@ -147,8 +163,8 @@ using namespace std;
 	// 磁力计数据包
 	struct Magnet_Sensors
 	{
-		uint64_t magnet_gps_time;
-		uint64_t magnet_mcu_time;
+		double magnet_gps_time;
+		double magnet_mcu_time;
 		int32_t magnet_data_x;
 		int32_t magnet_data_y;
 		int32_t magnet_data_z;
@@ -157,32 +173,41 @@ using namespace std;
 	// GPS数据包
 	struct GPS_Sensors
 	{
-		uint64_t pps_gps_time;
-		uint64_t pps_mcu_time;
-		int64_t gps_error_time;
-		int64_t gps_extra_error_time;
+		double pps_gps_time;
+		double pps_mcu_time;
+		double gps_error_time;
+		double gps_extra_error_time;
 		uint16_t gps_scale;
-		int32_t longitude;
-		int32_t latitude;
-		int32_t height;
-		int32_t velocity_n;
-		int32_t velocity_e;
-		int32_t velocity_d;
+		float longitude;
+		float latitude;
+		float height;
+		float velocity_n;
+		float velocity_e;
+		float velocity_d;
 	};
 	
 	// 相机数据包
 	struct Camera_Sensors
 	{
-		uint64_t pulse_gps_time;
-		uint64_t pulse_mcu_time;
+		double pulse_gps_time;
+		double pulse_mcu_time;
+	};
+
+	// FPGA时间数据包
+	struct FPGA_time_Sensors
+	{
+		double fpga_pps_fpga_time;
+		double fpga_pps_mcu_time;
+		double gps_pps_fpga_time;
+		double gps_pps_mcu_time;
 	};
 
 	// 气压计数据包
 	struct Barometer_Sensors
 	{
-		uint64_t data_gps_time;
-		uint64_t data_mcu_time;
-		int32_t height;
+		double data_gps_time;
+		double data_mcu_time;
+		float height;
 	};
 
 	// 接受数据包
@@ -196,6 +221,7 @@ using namespace std;
 		GPS_Sensors gps;
 		Camera_Sensors camera;
 		Barometer_Sensors barometer;
+		FPGA_time_Sensors fpga;
 	};
 
 	// IMU 数据包
@@ -366,6 +392,29 @@ using namespace std;
 		uint8_t	frame_tail; 						// 帧尾
 	};
 
+	// GPS对应的FPGA时间数据包
+	struct FPGA_PPS_Time_Data
+	{
+		uint8_t	frame_header1; 						// 帧头
+		uint8_t	frame_header2; 						// 帧头
+		uint8_t length[4];							// 帧长度
+		uint8_t calib[2];							// 帧头校验
+		
+		uint8_t count1[4];							// 帧ID
+		uint8_t count2[4];							// 帧ID
+		
+		uint8_t type;								// 数据包类型
+		uint8_t name;								// 相机名称
+		uint8_t number;								// 相机序号
+		
+		uint8_t fpga_pps_fpga_time[8];				// FPGA pps 对应的FPGA时间信息（nus）
+		uint8_t fpga_pps_mcu_time[8];				// FPGA pps 对应的MCU时间信息（nus）
+		uint8_t gps_pps_fpga_time[8];				// GPS pps 对应的FPGA时间信息（nus）
+		uint8_t gps_pps_mcu_time[8];				// GPS pps 对应的MCU推算时间信息（nus）
+		
+		uint8_t	crc_calib;							// 校验码
+		uint8_t	frame_tail;							// 帧尾
+	};
 
 	// 使用同一存储空间，长度8个字节，高位在前，低位在后
 	union         
@@ -407,7 +456,21 @@ using namespace std;
 	{
 		int16_t B16;
 		uint8_t B2[2];	
-	}M_INT16;   
+	}M_INT16;  
+	
+	// 使用同一存储空间，长度8个字节，高位在前，低位在后
+	union        
+	{
+		double B64;
+		uint8_t B8[8];	
+	}M_DOUBLE;   
+
+	// 使用同一存储空间，长度8个字节，高位在前，低位在后
+	union        
+	{
+		float B32;
+		uint8_t B4[4];	
+	}M_FLOAT;   
 /* 通信端口 */
 
 /* 接受状态机 */
@@ -540,7 +603,10 @@ class robot
 		ros::Publisher D435i_publisher; 
 
         // 命令话题发布者
-		ros::Publisher Command_publisher; 
+		ros::Publisher Command_publisher;
+
+        // FPGA数据话题发布者
+		ros::Publisher FPGA_publisher;  
 
         // 相机触发频率话题订阅者  
 		ros::Subscriber trigger_subscriber;    

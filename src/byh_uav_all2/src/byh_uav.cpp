@@ -13,6 +13,7 @@ byh_uav::uav_barometer SPL06;
 byh_uav::uav_gps ZEDF9P;
 byh_uav::uav_frequence D435i;
 byh_uav::uav_command Command;
+byh_uav::uav_fpga_time FPGA_Time;
 
 bool first = true;
 
@@ -246,6 +247,7 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
     Camera_Sensor_Data* data_camera;
     Barometer_Sensor_Data* data_barometer;
     Command_Data* data_command;
+    FPGA_PPS_Time_Data* data_fpga;
 
     // 判断状态机
     switch(state)
@@ -378,45 +380,45 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         Receive_Data.sequence[1] = M_UINT32.U32;
 
                         // 时间
-                        M_UINT64.B8[7] = data_imu->accel_gps_time[0];
-                        M_UINT64.B8[6] = data_imu->accel_gps_time[1];
-                        M_UINT64.B8[5] = data_imu->accel_gps_time[2];
-                        M_UINT64.B8[4] = data_imu->accel_gps_time[3];
-                        M_UINT64.B8[3] = data_imu->accel_gps_time[4];
-                        M_UINT64.B8[2] = data_imu->accel_gps_time[5];
-                        M_UINT64.B8[1] = data_imu->accel_gps_time[6];
-                        M_UINT64.B8[0] = data_imu->accel_gps_time[7];
-                        Receive_Data.imu.accel_gps_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_imu->accel_gps_time[0];
+                        M_DOUBLE.B8[6] = data_imu->accel_gps_time[1];
+                        M_DOUBLE.B8[5] = data_imu->accel_gps_time[2];
+                        M_DOUBLE.B8[4] = data_imu->accel_gps_time[3];
+                        M_DOUBLE.B8[3] = data_imu->accel_gps_time[4];
+                        M_DOUBLE.B8[2] = data_imu->accel_gps_time[5];
+                        M_DOUBLE.B8[1] = data_imu->accel_gps_time[6];
+                        M_DOUBLE.B8[0] = data_imu->accel_gps_time[7];
+                        Receive_Data.imu.accel_gps_time = M_DOUBLE.B64;
                         
-                        M_UINT64.B8[7] = data_imu->accel_mcu_time[0];
-                        M_UINT64.B8[6] = data_imu->accel_mcu_time[1];
-                        M_UINT64.B8[5] = data_imu->accel_mcu_time[2];
-                        M_UINT64.B8[4] = data_imu->accel_mcu_time[3];
-                        M_UINT64.B8[3] = data_imu->accel_mcu_time[4];
-                        M_UINT64.B8[2] = data_imu->accel_mcu_time[5];
-                        M_UINT64.B8[1] = data_imu->accel_mcu_time[6];
-                        M_UINT64.B8[0] = data_imu->accel_mcu_time[7];
-                        Receive_Data.imu.accel_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_imu->accel_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_imu->accel_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_imu->accel_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_imu->accel_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_imu->accel_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_imu->accel_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_imu->accel_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_imu->accel_mcu_time[7];
+                        Receive_Data.imu.accel_mcu_time = M_DOUBLE.B64;
                         
-                        M_UINT64.B8[7] = data_imu->gyro_gps_time[0];
-                        M_UINT64.B8[6] = data_imu->gyro_gps_time[1];
-                        M_UINT64.B8[5] = data_imu->gyro_gps_time[2];
-                        M_UINT64.B8[4] = data_imu->gyro_gps_time[3];
-                        M_UINT64.B8[3] = data_imu->gyro_gps_time[4];
-                        M_UINT64.B8[2] = data_imu->gyro_gps_time[5];
-                        M_UINT64.B8[1] = data_imu->gyro_gps_time[6];
-                        M_UINT64.B8[0] = data_imu->gyro_gps_time[7];
-                        Receive_Data.imu.gyro_gps_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_imu->gyro_gps_time[0];
+                        M_DOUBLE.B8[6] = data_imu->gyro_gps_time[1];
+                        M_DOUBLE.B8[5] = data_imu->gyro_gps_time[2];
+                        M_DOUBLE.B8[4] = data_imu->gyro_gps_time[3];
+                        M_DOUBLE.B8[3] = data_imu->gyro_gps_time[4];
+                        M_DOUBLE.B8[2] = data_imu->gyro_gps_time[5];
+                        M_DOUBLE.B8[1] = data_imu->gyro_gps_time[6];
+                        M_DOUBLE.B8[0] = data_imu->gyro_gps_time[7];
+                        Receive_Data.imu.gyro_gps_time = M_DOUBLE.B64;
                         
-                        M_UINT64.B8[7] = data_imu->gyro_mcu_time[0];
-                        M_UINT64.B8[6] = data_imu->gyro_mcu_time[1];
-                        M_UINT64.B8[5] = data_imu->gyro_mcu_time[2];
-                        M_UINT64.B8[4] = data_imu->gyro_mcu_time[3];
-                        M_UINT64.B8[3] = data_imu->gyro_mcu_time[4];
-                        M_UINT64.B8[2] = data_imu->gyro_mcu_time[5];
-                        M_UINT64.B8[1] = data_imu->gyro_mcu_time[6];
-                        M_UINT64.B8[0] = data_imu->gyro_mcu_time[7];
-                        Receive_Data.imu.gyro_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_imu->gyro_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_imu->gyro_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_imu->gyro_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_imu->gyro_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_imu->gyro_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_imu->gyro_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_imu->gyro_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_imu->gyro_mcu_time[7];
+                        Receive_Data.imu.gyro_mcu_time = M_DOUBLE.B64;
                         
                         // 数据
                         M_INT32.B4[3] = data_imu->accel_data_x[0];
@@ -474,16 +476,16 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
                             
-                            ADIS16470.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ADIS16470.gyro_mcu_time;
+                            ADIS16470.sample_time = Receive_Data.imu.gyro_mcu_time - ADIS16470.gyro_mcu_time;
                             ADIS16470.name = "ADIS16470";
                             ADIS16470.header.stamp = ros::Time::now(); 
                             ADIS16470.header.frame_id = frame_id; 
                             ADIS16470.number = data_imu->number;
                             ADIS16470.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            ADIS16470.accel_gps_time = Receive_Data.imu.accel_gps_time/10000000000 + Receive_Data.imu.accel_gps_time%10000000000*0.0000000001;
-                            ADIS16470.accel_mcu_time = Receive_Data.imu.accel_mcu_time/10000000000 + Receive_Data.imu.accel_mcu_time%10000000000*0.0000000001;
-                            ADIS16470.gyro_gps_time = Receive_Data.imu.gyro_gps_time/10000000000 + Receive_Data.imu.gyro_gps_time%10000000000*0.0000000001;
-                            ADIS16470.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001;
+                            ADIS16470.accel_gps_time = Receive_Data.imu.accel_gps_time;
+                            ADIS16470.accel_mcu_time = Receive_Data.imu.accel_mcu_time;
+                            ADIS16470.gyro_gps_time = Receive_Data.imu.gyro_gps_time;
+                            ADIS16470.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time;
                             ADIS16470.linear_acceleration.x = Receive_Data.imu.accel_data_x * ACCEl_ADIS16470_RATIO;
                             ADIS16470.linear_acceleration.y = Receive_Data.imu.accel_data_y * ACCEl_ADIS16470_RATIO;
                             ADIS16470.linear_acceleration.z = Receive_Data.imu.accel_data_z * ACCEl_ADIS16470_RATIO;
@@ -519,16 +521,16 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
 
-                            ICM42688.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ICM42688.gyro_mcu_time;
+                            ICM42688.sample_time = Receive_Data.imu.gyro_mcu_time - ICM42688.gyro_mcu_time;
                             ICM42688.name = "ICM42688";
                             ICM42688.header.stamp = ros::Time::now(); 
                             ICM42688.header.frame_id = frame_id; 
                             ICM42688.number = data_imu->number;
                             ICM42688.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            ICM42688.accel_gps_time = Receive_Data.imu.accel_gps_time/10000000000 + Receive_Data.imu.accel_gps_time%10000000000*0.0000000001;
-                            ICM42688.accel_mcu_time = Receive_Data.imu.accel_mcu_time/10000000000 + Receive_Data.imu.accel_mcu_time%10000000000*0.0000000001;
-                            ICM42688.gyro_gps_time = Receive_Data.imu.gyro_gps_time/10000000000 + Receive_Data.imu.gyro_gps_time%10000000000*0.0000000001;
-                            ICM42688.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001;
+                            ICM42688.accel_gps_time = Receive_Data.imu.accel_gps_time;
+                            ICM42688.accel_mcu_time = Receive_Data.imu.accel_mcu_time;
+                            ICM42688.gyro_gps_time = Receive_Data.imu.gyro_gps_time;
+                            ICM42688.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time;
                             ICM42688.linear_acceleration.x = Receive_Data.imu.accel_data_x * ACCEl_ICM42688_RATIO;
                             ICM42688.linear_acceleration.y = Receive_Data.imu.accel_data_y * ACCEl_ICM42688_RATIO;
                             ICM42688.linear_acceleration.z = Receive_Data.imu.accel_data_z * ACCEl_ICM42688_RATIO;
@@ -564,16 +566,16 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
 
-                            BMI088.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - BMI088.gyro_mcu_time;
+                            BMI088.sample_time = Receive_Data.imu.gyro_mcu_time - BMI088.gyro_mcu_time;
                             BMI088.name = "BMI088";
                             BMI088.header.stamp = ros::Time::now(); 
                             BMI088.header.frame_id = frame_id; 
                             BMI088.number = data_imu->number;
                             BMI088.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            BMI088.accel_gps_time = Receive_Data.imu.accel_gps_time/10000000000 + Receive_Data.imu.accel_gps_time%10000000000*0.0000000001;
-                            BMI088.accel_mcu_time = Receive_Data.imu.accel_mcu_time/10000000000 + Receive_Data.imu.accel_mcu_time%10000000000*0.0000000001;
-                            BMI088.gyro_gps_time = Receive_Data.imu.gyro_gps_time/10000000000 + Receive_Data.imu.gyro_gps_time%10000000000*0.0000000001;
-                            BMI088.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001;
+                            BMI088.accel_gps_time = Receive_Data.imu.accel_gps_time;
+                            BMI088.accel_mcu_time = Receive_Data.imu.accel_mcu_time;
+                            BMI088.gyro_gps_time = Receive_Data.imu.gyro_gps_time;
+                            BMI088.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time;
                             BMI088.linear_acceleration.x = Receive_Data.imu.accel_data_x * ACCEl_BMI088_RATIO;
                             BMI088.linear_acceleration.y = Receive_Data.imu.accel_data_y * ACCEl_BMI088_RATIO;
                             BMI088.linear_acceleration.z = Receive_Data.imu.accel_data_z * ACCEl_BMI088_RATIO;
@@ -609,16 +611,16 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
 
-                            ADIS16465.sample_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001 - ADIS16465.gyro_mcu_time;
+                            ADIS16465.sample_time = Receive_Data.imu.gyro_mcu_time - ADIS16465.gyro_mcu_time;
                             ADIS16465.name = "ADIS16465";
                             ADIS16465.header.stamp = ros::Time::now(); 
                             ADIS16465.header.frame_id = frame_id; 
                             ADIS16465.number = data_imu->number;
                             ADIS16465.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            ADIS16465.accel_gps_time = Receive_Data.imu.accel_gps_time/10000000000 + Receive_Data.imu.accel_gps_time%10000000000*0.0000000001;
-                            ADIS16465.accel_mcu_time = Receive_Data.imu.accel_mcu_time/10000000000 + Receive_Data.imu.accel_mcu_time%10000000000*0.0000000001;
-                            ADIS16465.gyro_gps_time = Receive_Data.imu.gyro_gps_time/10000000000 + Receive_Data.imu.gyro_gps_time%10000000000*0.0000000001;
-                            ADIS16465.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time/10000000000 + Receive_Data.imu.gyro_mcu_time%10000000000*0.0000000001;
+                            ADIS16465.accel_gps_time = Receive_Data.imu.accel_gps_time;
+                            ADIS16465.accel_mcu_time = Receive_Data.imu.accel_mcu_time;
+                            ADIS16465.gyro_gps_time = Receive_Data.imu.gyro_gps_time;
+                            ADIS16465.gyro_mcu_time = Receive_Data.imu.gyro_mcu_time;
                             ADIS16465.linear_acceleration.x = Receive_Data.imu.accel_data_x * ACCEl_ADIS16465_RATIO;
                             ADIS16465.linear_acceleration.y = Receive_Data.imu.accel_data_y * ACCEl_ADIS16465_RATIO;
                             ADIS16465.linear_acceleration.z = Receive_Data.imu.accel_data_z * ACCEl_ADIS16465_RATIO;
@@ -651,24 +653,24 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         Receive_Data.sequence[1] = M_UINT32.U32;
     
                         // 时间
-                        M_UINT64.B8[7] = data_magnet->magnet_gps_time[0];
-                        M_UINT64.B8[6] = data_magnet->magnet_gps_time[1];
-                        M_UINT64.B8[5] = data_magnet->magnet_gps_time[2];
-                        M_UINT64.B8[4] = data_magnet->magnet_gps_time[3];
-                        M_UINT64.B8[3] = data_magnet->magnet_gps_time[4];
-                        M_UINT64.B8[2] = data_magnet->magnet_gps_time[5];
-                        M_UINT64.B8[1] = data_magnet->magnet_gps_time[6];
-                        M_UINT64.B8[0] = data_magnet->magnet_gps_time[7];
-                        Receive_Data.magnet.magnet_gps_time = M_UINT64.U64;
-                        M_UINT64.B8[7] = data_magnet->magnet_mcu_time[0];
-                        M_UINT64.B8[6] = data_magnet->magnet_mcu_time[1];
-                        M_UINT64.B8[5] = data_magnet->magnet_mcu_time[2];
-                        M_UINT64.B8[4] = data_magnet->magnet_mcu_time[3];
-                        M_UINT64.B8[3] = data_magnet->magnet_mcu_time[4];
-                        M_UINT64.B8[2] = data_magnet->magnet_mcu_time[5];
-                        M_UINT64.B8[1] = data_magnet->magnet_mcu_time[6];
-                        M_UINT64.B8[0] = data_magnet->magnet_mcu_time[7];
-                        Receive_Data.magnet.magnet_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_magnet->magnet_gps_time[0];
+                        M_DOUBLE.B8[6] = data_magnet->magnet_gps_time[1];
+                        M_DOUBLE.B8[5] = data_magnet->magnet_gps_time[2];
+                        M_DOUBLE.B8[4] = data_magnet->magnet_gps_time[3];
+                        M_DOUBLE.B8[3] = data_magnet->magnet_gps_time[4];
+                        M_DOUBLE.B8[2] = data_magnet->magnet_gps_time[5];
+                        M_DOUBLE.B8[1] = data_magnet->magnet_gps_time[6];
+                        M_DOUBLE.B8[0] = data_magnet->magnet_gps_time[7];
+                        Receive_Data.magnet.magnet_gps_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_magnet->magnet_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_magnet->magnet_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_magnet->magnet_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_magnet->magnet_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_magnet->magnet_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_magnet->magnet_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_magnet->magnet_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_magnet->magnet_mcu_time[7];
+                        Receive_Data.magnet.magnet_mcu_time = M_DOUBLE.B64;
 
                         // 数据
                         M_INT32.B4[3] = data_magnet->magnet_data_x[0];
@@ -710,14 +712,14 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
 
-                            RM3100.sample_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001 - RM3100.magnet_mcu_time;
+                            RM3100.sample_time = Receive_Data.magnet.magnet_mcu_time - RM3100.magnet_mcu_time;
                             RM3100.name = "RM3100";
                             RM3100.header.stamp = ros::Time::now(); 
                             RM3100.header.frame_id = frame_id; 
                             RM3100.number = data_magnet->number;
                             RM3100.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            RM3100.magnet_gps_time = Receive_Data.magnet.magnet_gps_time/10000000000 + Receive_Data.magnet.magnet_gps_time%10000000000*0.0000000001;
-                            RM3100.magnet_mcu_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001;
+                            RM3100.magnet_gps_time = Receive_Data.magnet.magnet_gps_time;
+                            RM3100.magnet_mcu_time = Receive_Data.magnet.magnet_mcu_time;
                             RM3100.magnet.x = Receive_Data.magnet.magnet_data_x * MAGNET_RM3100_RATIO;
                             RM3100.magnet.y = Receive_Data.magnet.magnet_data_y * MAGNET_RM3100_RATIO;
                             RM3100.magnet.z = Receive_Data.magnet.magnet_data_z * MAGNET_RM3100_RATIO;
@@ -746,14 +748,14 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                                     first = false;
                             }
                             
-                            AK8975.sample_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001 - AK8975.magnet_mcu_time;
+                            AK8975.sample_time = Receive_Data.magnet.magnet_mcu_time - AK8975.magnet_mcu_time;
                             AK8975.name = "AK8975";
                             AK8975.header.stamp = ros::Time::now(); 
                             AK8975.header.frame_id = frame_id; 
                             AK8975.number = data_magnet->number;
                             AK8975.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            AK8975.magnet_gps_time = Receive_Data.magnet.magnet_gps_time/10000000000 + Receive_Data.magnet.magnet_gps_time%10000000000*0.0000000001;
-                            AK8975.magnet_mcu_time = Receive_Data.magnet.magnet_mcu_time/10000000000 + Receive_Data.magnet.magnet_mcu_time%10000000000*0.0000000001;
+                            AK8975.magnet_gps_time = Receive_Data.magnet.magnet_gps_time;
+                            AK8975.magnet_mcu_time = Receive_Data.magnet.magnet_mcu_time;
                             AK8975.magnet.x = Receive_Data.magnet.magnet_data_x * MAGNET_AK8975_RATIO;
                             AK8975.magnet.y = Receive_Data.magnet.magnet_data_y * MAGNET_AK8975_RATIO;
                             AK8975.magnet.z = Receive_Data.magnet.magnet_data_z * MAGNET_AK8975_RATIO;
@@ -778,81 +780,81 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         Receive_Data.sequence[1] = M_UINT32.U32;
 
                         // 时间
-                        M_UINT64.B8[7] = data_gps->pps_gps_time[0];
-                        M_UINT64.B8[6] = data_gps->pps_gps_time[1];
-                        M_UINT64.B8[5] = data_gps->pps_gps_time[2];
-                        M_UINT64.B8[4] = data_gps->pps_gps_time[3];
-                        M_UINT64.B8[3] = data_gps->pps_gps_time[4];
-                        M_UINT64.B8[2] = data_gps->pps_gps_time[5];
-                        M_UINT64.B8[1] = data_gps->pps_gps_time[6];
-                        M_UINT64.B8[0] = data_gps->pps_gps_time[7];
-                        Receive_Data.gps.pps_gps_time = M_UINT64.U64;
-                        M_UINT64.B8[7] = data_gps->pps_mcu_time[0];
-                        M_UINT64.B8[6] = data_gps->pps_mcu_time[1];
-                        M_UINT64.B8[5] = data_gps->pps_mcu_time[2];
-                        M_UINT64.B8[4] = data_gps->pps_mcu_time[3];
-                        M_UINT64.B8[3] = data_gps->pps_mcu_time[4];
-                        M_UINT64.B8[2] = data_gps->pps_mcu_time[5];
-                        M_UINT64.B8[1] = data_gps->pps_mcu_time[6];
-                        M_UINT64.B8[0] = data_gps->pps_mcu_time[7];
-                        Receive_Data.gps.pps_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_gps->pps_gps_time[0];
+                        M_DOUBLE.B8[6] = data_gps->pps_gps_time[1];
+                        M_DOUBLE.B8[5] = data_gps->pps_gps_time[2];
+                        M_DOUBLE.B8[4] = data_gps->pps_gps_time[3];
+                        M_DOUBLE.B8[3] = data_gps->pps_gps_time[4];
+                        M_DOUBLE.B8[2] = data_gps->pps_gps_time[5];
+                        M_DOUBLE.B8[1] = data_gps->pps_gps_time[6];
+                        M_DOUBLE.B8[0] = data_gps->pps_gps_time[7];
+                        Receive_Data.gps.pps_gps_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_gps->pps_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_gps->pps_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_gps->pps_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_gps->pps_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_gps->pps_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_gps->pps_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_gps->pps_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_gps->pps_mcu_time[7];
+                        Receive_Data.gps.pps_mcu_time = M_DOUBLE.B64;
 
-                        M_INT64.B8[7] = data_gps->gps_error_time[0];
-                        M_INT64.B8[6] = data_gps->gps_error_time[1];
-                        M_INT64.B8[5] = data_gps->gps_error_time[2];
-                        M_INT64.B8[4] = data_gps->gps_error_time[3];
-                        M_INT64.B8[3] = data_gps->gps_error_time[4];
-                        M_INT64.B8[2] = data_gps->gps_error_time[5];
-                        M_INT64.B8[1] = data_gps->gps_error_time[6];
-                        M_INT64.B8[0] = data_gps->gps_error_time[7];
-                        Receive_Data.gps.gps_error_time = M_INT64.B64;
+                        M_DOUBLE.B8[7] = data_gps->gps_error_time[0];
+                        M_DOUBLE.B8[6] = data_gps->gps_error_time[1];
+                        M_DOUBLE.B8[5] = data_gps->gps_error_time[2];
+                        M_DOUBLE.B8[4] = data_gps->gps_error_time[3];
+                        M_DOUBLE.B8[3] = data_gps->gps_error_time[4];
+                        M_DOUBLE.B8[2] = data_gps->gps_error_time[5];
+                        M_DOUBLE.B8[1] = data_gps->gps_error_time[6];
+                        M_DOUBLE.B8[0] = data_gps->gps_error_time[7];
+                        Receive_Data.gps.gps_error_time = M_DOUBLE.B64;
 
-                        M_INT64.B8[7] = data_gps->gps_extra_error_time[0];
-                        M_INT64.B8[6] = data_gps->gps_extra_error_time[1];
-                        M_INT64.B8[5] = data_gps->gps_extra_error_time[2];
-                        M_INT64.B8[4] = data_gps->gps_extra_error_time[3];
-                        M_INT64.B8[3] = data_gps->gps_extra_error_time[4];
-                        M_INT64.B8[2] = data_gps->gps_extra_error_time[5];
-                        M_INT64.B8[1] = data_gps->gps_extra_error_time[6];
-                        M_INT64.B8[0] = data_gps->gps_extra_error_time[7];
-                        Receive_Data.gps.gps_extra_error_time = M_INT64.B64;
+                        M_DOUBLE.B8[7] = data_gps->gps_extra_error_time[0];
+                        M_DOUBLE.B8[6] = data_gps->gps_extra_error_time[1];
+                        M_DOUBLE.B8[5] = data_gps->gps_extra_error_time[2];
+                        M_DOUBLE.B8[4] = data_gps->gps_extra_error_time[3];
+                        M_DOUBLE.B8[3] = data_gps->gps_extra_error_time[4];
+                        M_DOUBLE.B8[2] = data_gps->gps_extra_error_time[5];
+                        M_DOUBLE.B8[1] = data_gps->gps_extra_error_time[6];
+                        M_DOUBLE.B8[0] = data_gps->gps_extra_error_time[7];
+                        Receive_Data.gps.gps_extra_error_time = M_DOUBLE.B64;
 
                         M_UINT16.B2[1] = data_gps->gps_scale[0];
                         M_UINT16.B2[0] = data_gps->gps_scale[1];
                         Receive_Data.gps.gps_scale = M_UINT16.U16;
 
                         // 数据
-                        M_INT32.B4[3] = data_gps->longitude[0];
-                        M_INT32.B4[2] = data_gps->longitude[1];
-                        M_INT32.B4[1] = data_gps->longitude[2];
-                        M_INT32.B4[0] = data_gps->longitude[3];
-                        Receive_Data.gps.longitude = M_INT32.B32;
-                        M_INT32.B4[3] = data_gps->latitude[0];
-                        M_INT32.B4[2] = data_gps->latitude[1];
-                        M_INT32.B4[1] = data_gps->latitude[2];
-                        M_INT32.B4[0] = data_gps->latitude[3];
-                        Receive_Data.gps.latitude = M_INT32.B32;
-                        M_INT32.B4[3] = data_gps->height[0];
-                        M_INT32.B4[2] = data_gps->height[1];
-                        M_INT32.B4[1] = data_gps->height[2];
-                        M_INT32.B4[0] = data_gps->height[3];
-                        Receive_Data.gps.height = M_INT32.B32;
+                        M_FLOAT.B4[3] = data_gps->longitude[0];
+                        M_FLOAT.B4[2] = data_gps->longitude[1];
+                        M_FLOAT.B4[1] = data_gps->longitude[2];
+                        M_FLOAT.B4[0] = data_gps->longitude[3];
+                        Receive_Data.gps.longitude = M_FLOAT.B32;
+                        M_FLOAT.B4[3] = data_gps->latitude[0];
+                        M_FLOAT.B4[2] = data_gps->latitude[1];
+                        M_FLOAT.B4[1] = data_gps->latitude[2];
+                        M_FLOAT.B4[0] = data_gps->latitude[3];
+                        Receive_Data.gps.latitude = M_FLOAT.B32;
+                        M_FLOAT.B4[3] = data_gps->height[0];
+                        M_FLOAT.B4[2] = data_gps->height[1];
+                        M_FLOAT.B4[1] = data_gps->height[2];
+                        M_FLOAT.B4[0] = data_gps->height[3];
+                        Receive_Data.gps.height = M_FLOAT.B32;
 
-                        M_INT32.B4[3] = data_gps->velocity_n[0];
-                        M_INT32.B4[2] = data_gps->velocity_n[1];
-                        M_INT32.B4[1] = data_gps->velocity_n[2];
-                        M_INT32.B4[0] = data_gps->velocity_n[3];
-                        Receive_Data.gps.velocity_n = M_INT32.B32;
-                        M_INT32.B4[3] = data_gps->velocity_e[0];
-                        M_INT32.B4[2] = data_gps->velocity_e[1];
-                        M_INT32.B4[1] = data_gps->velocity_e[2];
-                        M_INT32.B4[0] = data_gps->velocity_e[3];
-                        Receive_Data.gps.velocity_e = M_INT32.B32;
-                        M_INT32.B4[3] = data_gps->velocity_d[0];
-                        M_INT32.B4[2] = data_gps->velocity_d[1];
-                        M_INT32.B4[1] = data_gps->velocity_d[2];
-                        M_INT32.B4[0] = data_gps->velocity_d[3];
-                        Receive_Data.gps.velocity_d = M_INT32.B32;
+                        M_FLOAT.B4[3] = data_gps->velocity_n[0];
+                        M_FLOAT.B4[2] = data_gps->velocity_n[1];
+                        M_FLOAT.B4[1] = data_gps->velocity_n[2];
+                        M_FLOAT.B4[0] = data_gps->velocity_n[3];
+                        Receive_Data.gps.velocity_n = M_FLOAT.B32;
+                        M_FLOAT.B4[3] = data_gps->velocity_e[0];
+                        M_FLOAT.B4[2] = data_gps->velocity_e[1];
+                        M_FLOAT.B4[1] = data_gps->velocity_e[2];
+                        M_FLOAT.B4[0] = data_gps->velocity_e[3];
+                        Receive_Data.gps.velocity_e = M_FLOAT.B32;
+                        M_FLOAT.B4[3] = data_gps->velocity_d[0];
+                        M_FLOAT.B4[2] = data_gps->velocity_d[1];
+                        M_FLOAT.B4[1] = data_gps->velocity_d[2];
+                        M_FLOAT.B4[0] = data_gps->velocity_d[3];
+                        Receive_Data.gps.velocity_d = M_FLOAT.B32;
 
                         // ZEDF9P
                         if( data_gps->name == NAME_ZEDF9P )
@@ -885,16 +887,16 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             ZEDF9P.valid = data_gps->valid;
                             ZEDF9P.filter_en = data_gps->filter_en;
                             ZEDF9P.gps_scale = Receive_Data.gps.gps_scale/100000000 + Receive_Data.gps.gps_scale%100000000*0.00000001+1;
-                            ZEDF9P.pps_gps_time = Receive_Data.gps.pps_gps_time/10000000000 + Receive_Data.gps.pps_gps_time%10000000000*0.0000000001;
-                            ZEDF9P.pps_mcu_time = Receive_Data.gps.pps_mcu_time/10000000000 + Receive_Data.gps.pps_mcu_time%10000000000*0.0000000001;
-                            ZEDF9P.gps_error_time = Receive_Data.gps.gps_error_time/10000000000 + Receive_Data.gps.gps_error_time%10000000000*0.0000000001;
-                            ZEDF9P.gps_extra_error_time = Receive_Data.gps.gps_extra_error_time/10000000000 + Receive_Data.gps.gps_extra_error_time%10000000000*0.0000000001;
-                            ZEDF9P.latitude = Receive_Data.gps.latitude/100000 + Receive_Data.gps.latitude%100000*0.00001;
-                            ZEDF9P.longitude = Receive_Data.gps.longitude/100000 + Receive_Data.gps.longitude%100000*0.00001;
-                            ZEDF9P.height = (Receive_Data.gps.height/100000 + Receive_Data.gps.height%100000*0.00001)/100;
-                            ZEDF9P.gps_velocity.x = (Receive_Data.gps.velocity_n/100000 + Receive_Data.gps.velocity_n%100000*0.00001)/100;
-                            ZEDF9P.gps_velocity.y = (Receive_Data.gps.velocity_e/100000 + Receive_Data.gps.velocity_e%100000*0.00001)/100;
-                            ZEDF9P.gps_velocity.z = (Receive_Data.gps.velocity_d/100000 + Receive_Data.gps.velocity_d%100000*0.00001)/100;
+                            ZEDF9P.pps_gps_time = Receive_Data.gps.pps_gps_time;
+                            ZEDF9P.pps_mcu_time = Receive_Data.gps.pps_mcu_time;
+                            ZEDF9P.gps_error_time = Receive_Data.gps.gps_error_time;
+                            ZEDF9P.gps_extra_error_time = Receive_Data.gps.gps_extra_error_time;
+                            ZEDF9P.latitude = Receive_Data.gps.latitude;
+                            ZEDF9P.longitude = Receive_Data.gps.longitude;
+                            ZEDF9P.height = Receive_Data.gps.height/100;
+                            ZEDF9P.gps_velocity.x = Receive_Data.gps.velocity_n;
+                            ZEDF9P.gps_velocity.y = Receive_Data.gps.velocity_e;
+                            ZEDF9P.gps_velocity.z = Receive_Data.gps.velocity_d;
                             ZEDF9P_publisher.publish(ZEDF9P);
                         }
                     }
@@ -916,24 +918,24 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         Receive_Data.sequence[1] = M_UINT32.U32;
 
                         // 时间
-                        M_UINT64.B8[7] = data_camera->pulse_gps_time[0];
-                        M_UINT64.B8[6] = data_camera->pulse_gps_time[1];
-                        M_UINT64.B8[5] = data_camera->pulse_gps_time[2];
-                        M_UINT64.B8[4] = data_camera->pulse_gps_time[3];
-                        M_UINT64.B8[3] = data_camera->pulse_gps_time[4];
-                        M_UINT64.B8[2] = data_camera->pulse_gps_time[5];
-                        M_UINT64.B8[1] = data_camera->pulse_gps_time[6];
-                        M_UINT64.B8[0] = data_camera->pulse_gps_time[7];
-                        Receive_Data.camera.pulse_gps_time = M_UINT64.U64;
-                        M_UINT64.B8[7] = data_camera->pulse_mcu_time[0];
-                        M_UINT64.B8[6] = data_camera->pulse_mcu_time[1];
-                        M_UINT64.B8[5] = data_camera->pulse_mcu_time[2];
-                        M_UINT64.B8[4] = data_camera->pulse_mcu_time[3];
-                        M_UINT64.B8[3] = data_camera->pulse_mcu_time[4];
-                        M_UINT64.B8[2] = data_camera->pulse_mcu_time[5];
-                        M_UINT64.B8[1] = data_camera->pulse_mcu_time[6];
-                        M_UINT64.B8[0] = data_camera->pulse_mcu_time[7];
-                        Receive_Data.camera.pulse_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_camera->pulse_gps_time[0];
+                        M_DOUBLE.B8[6] = data_camera->pulse_gps_time[1];
+                        M_DOUBLE.B8[5] = data_camera->pulse_gps_time[2];
+                        M_DOUBLE.B8[4] = data_camera->pulse_gps_time[3];
+                        M_DOUBLE.B8[3] = data_camera->pulse_gps_time[4];
+                        M_DOUBLE.B8[2] = data_camera->pulse_gps_time[5];
+                        M_DOUBLE.B8[1] = data_camera->pulse_gps_time[6];
+                        M_DOUBLE.B8[0] = data_camera->pulse_gps_time[7];
+                        Receive_Data.camera.pulse_gps_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_camera->pulse_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_camera->pulse_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_camera->pulse_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_camera->pulse_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_camera->pulse_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_camera->pulse_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_camera->pulse_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_camera->pulse_mcu_time[7];
+                        Receive_Data.camera.pulse_mcu_time = M_DOUBLE.B64;
 
                         // D435i
                         if( data_camera->name == NAME_D435I )
@@ -962,8 +964,8 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             D435i.header.frame_id = frame_id; 
                             D435i.number = data_camera->number;
                             D435i.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            D435i.pulse_gps_time = Receive_Data.camera.pulse_gps_time/10000000000 + Receive_Data.camera.pulse_gps_time%10000000000*0.0000000001;
-                            D435i.pulse_mcu_time = Receive_Data.camera.pulse_mcu_time/10000000000 + Receive_Data.camera.pulse_mcu_time%10000000000*0.0000000001;
+                            D435i.pulse_gps_time = Receive_Data.camera.pulse_gps_time;
+                            D435i.pulse_mcu_time = Receive_Data.camera.pulse_mcu_time;
                             D435i_publisher.publish(D435i);
                         }
                     }
@@ -985,31 +987,31 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         Receive_Data.sequence[1] = M_UINT32.U32;
 
                         // 时间
-                        M_UINT64.B8[7] = data_barometer->data_gps_time[0];
-                        M_UINT64.B8[6] = data_barometer->data_gps_time[1];
-                        M_UINT64.B8[5] = data_barometer->data_gps_time[2];
-                        M_UINT64.B8[4] = data_barometer->data_gps_time[3];
-                        M_UINT64.B8[3] = data_barometer->data_gps_time[4];
-                        M_UINT64.B8[2] = data_barometer->data_gps_time[5];
-                        M_UINT64.B8[1] = data_barometer->data_gps_time[6];
-                        M_UINT64.B8[0] = data_barometer->data_gps_time[7];
-                        Receive_Data.barometer.data_gps_time = M_UINT64.U64;
-                        M_UINT64.B8[7] = data_barometer->data_mcu_time[0];
-                        M_UINT64.B8[6] = data_barometer->data_mcu_time[1];
-                        M_UINT64.B8[5] = data_barometer->data_mcu_time[2];
-                        M_UINT64.B8[4] = data_barometer->data_mcu_time[3];
-                        M_UINT64.B8[3] = data_barometer->data_mcu_time[4];
-                        M_UINT64.B8[2] = data_barometer->data_mcu_time[5];
-                        M_UINT64.B8[1] = data_barometer->data_mcu_time[6];
-                        M_UINT64.B8[0] = data_barometer->data_mcu_time[7];
-                        Receive_Data.barometer.data_mcu_time = M_UINT64.U64;
+                        M_DOUBLE.B8[7] = data_barometer->data_gps_time[0];
+                        M_DOUBLE.B8[6] = data_barometer->data_gps_time[1];
+                        M_DOUBLE.B8[5] = data_barometer->data_gps_time[2];
+                        M_DOUBLE.B8[4] = data_barometer->data_gps_time[3];
+                        M_DOUBLE.B8[3] = data_barometer->data_gps_time[4];
+                        M_DOUBLE.B8[2] = data_barometer->data_gps_time[5];
+                        M_DOUBLE.B8[1] = data_barometer->data_gps_time[6];
+                        M_DOUBLE.B8[0] = data_barometer->data_gps_time[7];
+                        Receive_Data.barometer.data_gps_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_barometer->data_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_barometer->data_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_barometer->data_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_barometer->data_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_barometer->data_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_barometer->data_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_barometer->data_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_barometer->data_mcu_time[7];
+                        Receive_Data.barometer.data_mcu_time = M_DOUBLE.B64;
 
                         // 数据
-                        M_INT32.B4[3] = data_barometer->height[0];
-                        M_INT32.B4[2] = data_barometer->height[1];
-                        M_INT32.B4[1] = data_barometer->height[2];
-                        M_INT32.B4[0] = data_barometer->height[3];
-                        Receive_Data.barometer.height = M_INT32.B32;
+                        M_FLOAT.B4[3] = data_barometer->height[0];
+                        M_FLOAT.B4[2] = data_barometer->height[1];
+                        M_FLOAT.B4[1] = data_barometer->height[2];
+                        M_FLOAT.B4[0] = data_barometer->height[3];
+                        Receive_Data.barometer.height = M_FLOAT.B32;
 
                         // MS5611
                         if( data_barometer->name == NAME_MS5611 )
@@ -1039,8 +1041,8 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             MS5611.header.frame_id = frame_id; 
                             MS5611.number = data_barometer->number;
                             MS5611.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            MS5611.data_gps_time = Receive_Data.barometer.data_gps_time/10000000000 + Receive_Data.barometer.data_gps_time%10000000000*0.0000000001;
-                            MS5611.data_mcu_time = Receive_Data.barometer.data_mcu_time/10000000000 + Receive_Data.barometer.data_mcu_time%10000000000*0.0000000001;
+                            MS5611.data_gps_time = Receive_Data.barometer.data_gps_time;
+                            MS5611.data_mcu_time = Receive_Data.barometer.data_mcu_time;
                             MS5611.height = Receive_Data.barometer.height;
                             MS5611_publisher.publish(MS5611);
                         }
@@ -1072,8 +1074,8 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             SPL06.header.frame_id = frame_id; 
                             SPL06.number = data_barometer->number;
                             SPL06.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            SPL06.data_gps_time = Receive_Data.barometer.data_gps_time/10000000000 + Receive_Data.barometer.data_gps_time%10000000000*0.0000000001;
-                            SPL06.data_mcu_time = Receive_Data.barometer.data_mcu_time/10000000000 + Receive_Data.barometer.data_mcu_time%10000000000*0.0000000001;
+                            SPL06.data_gps_time = Receive_Data.barometer.data_gps_time;
+                            SPL06.data_mcu_time = Receive_Data.barometer.data_mcu_time;
                             SPL06.height = Receive_Data.barometer.height;
                             SPL06_publisher.publish(SPL06);
                         }
@@ -1105,8 +1107,8 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                             BMP581.header.frame_id = frame_id; 
                             BMP581.number = data_barometer->number;
                             BMP581.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
-                            BMP581.data_gps_time = Receive_Data.barometer.data_gps_time/10000000000 + Receive_Data.barometer.data_gps_time%10000000000*0.0000000001;
-                            BMP581.data_mcu_time = Receive_Data.barometer.data_mcu_time/10000000000 + Receive_Data.barometer.data_mcu_time%10000000000*0.0000000001;
+                            BMP581.data_gps_time = Receive_Data.barometer.data_gps_time;
+                            BMP581.data_mcu_time = Receive_Data.barometer.data_mcu_time;
                             BMP581.height = Receive_Data.barometer.height;
                             BMP581_publisher.publish(BMP581);
                         }
@@ -1161,6 +1163,106 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
 
                     }
                     
+                    // FPGA时间数据包
+                    else if(Receive_Data.rx[16] == TYPE_FPGA)
+                    {
+                        data_fpga = (FPGA_PPS_Time_Data*) Receive_Data.rx;
+                        // 序列号
+                        M_UINT32.B4[3] = data_fpga->count1[0];
+                        M_UINT32.B4[2] = data_fpga->count1[1];
+                        M_UINT32.B4[1] = data_fpga->count1[2];
+                        M_UINT32.B4[0] = data_fpga->count1[3];
+                        Receive_Data.sequence[0] = M_UINT32.U32;
+                        M_UINT32.B4[3] = data_fpga->count2[0];
+                        M_UINT32.B4[2] = data_fpga->count2[1];
+                        M_UINT32.B4[1] = data_fpga->count2[2];
+                        M_UINT32.B4[0] = data_fpga->count2[3];
+                        Receive_Data.sequence[1] = M_UINT32.U32;
+
+                        // 时间
+                        M_DOUBLE.B8[7] = data_fpga->fpga_pps_fpga_time[0];
+                        M_DOUBLE.B8[6] = data_fpga->fpga_pps_fpga_time[1];
+                        M_DOUBLE.B8[5] = data_fpga->fpga_pps_fpga_time[2];
+                        M_DOUBLE.B8[4] = data_fpga->fpga_pps_fpga_time[3];
+                        M_DOUBLE.B8[3] = data_fpga->fpga_pps_fpga_time[4];
+                        M_DOUBLE.B8[2] = data_fpga->fpga_pps_fpga_time[5];
+                        M_DOUBLE.B8[1] = data_fpga->fpga_pps_fpga_time[6];
+                        M_DOUBLE.B8[0] = data_fpga->fpga_pps_fpga_time[7];
+                        Receive_Data.fpga.fpga_pps_fpga_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_fpga->fpga_pps_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_fpga->fpga_pps_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_fpga->fpga_pps_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_fpga->fpga_pps_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_fpga->fpga_pps_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_fpga->fpga_pps_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_fpga->fpga_pps_mcu_time[6];
+                        M_DOUBLE.B8[0] = data_fpga->fpga_pps_mcu_time[7];
+                        Receive_Data.fpga.fpga_pps_mcu_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_fpga->gps_pps_fpga_time[0];
+                        M_DOUBLE.B8[6] = data_fpga->gps_pps_fpga_time[1];
+                        M_DOUBLE.B8[5] = data_fpga->gps_pps_fpga_time[2];
+                        M_DOUBLE.B8[4] = data_fpga->gps_pps_fpga_time[3];
+                        M_DOUBLE.B8[3] = data_fpga->gps_pps_fpga_time[4];
+                        M_DOUBLE.B8[2] = data_fpga->gps_pps_fpga_time[5];
+                        M_DOUBLE.B8[1] = data_fpga->gps_pps_fpga_time[6];
+                        M_DOUBLE.B8[0] = data_fpga->gps_pps_fpga_time[7];
+                        Receive_Data.fpga.gps_pps_fpga_time = M_DOUBLE.B64;
+                        M_DOUBLE.B8[7] = data_fpga->gps_pps_mcu_time[0];
+                        M_DOUBLE.B8[6] = data_fpga->gps_pps_mcu_time[1];
+                        M_DOUBLE.B8[5] = data_fpga->gps_pps_mcu_time[2];
+                        M_DOUBLE.B8[4] = data_fpga->gps_pps_mcu_time[3];
+                        M_DOUBLE.B8[3] = data_fpga->gps_pps_mcu_time[4];
+                        M_DOUBLE.B8[2] = data_fpga->gps_pps_mcu_time[5];
+                        M_DOUBLE.B8[1] = data_fpga->gps_pps_mcu_time[6];
+                        Receive_Data.fpga.gps_pps_mcu_time = M_DOUBLE.B64;
+
+                        // FPGA时间
+                        if( data_fpga->name == NAME_PPS_FPGA_TIME )
+                        {
+                            // 收到以前的数据
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)D435i.count && D435i.count !=0 )
+                            {
+                                return false;
+                            }
+
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)D435i.count + 1 && D435i.count !=0 )
+                            {
+                                // 错误过多
+                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)D435i.count, MAX_LOST_COUNT )) != true )
+                                {
+                                    // return false;
+                                }
+                                if(first == false)
+                                    ROS_WARN("[Lost_Count] FPGA: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - D435i.count - 1, D435i.count);
+
+                                if(first == true)
+                                    first = false;
+                            }
+                            double time = Receive_Data.fpga.gps_pps_mcu_time;
+                            double integerPart = trunc(time);
+                            double decimalPart = fabs(time - integerPart);
+                            
+                            FPGA_Time.name = "FPGA_Time";
+                            FPGA_Time.header.stamp = ros::Time::now(); 
+                            FPGA_Time.header.frame_id = frame_id; 
+                            FPGA_Time.number = data_fpga->number;
+                            FPGA_Time.count = Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296;
+                            FPGA_Time.fpga_pps_fpga_time = Receive_Data.fpga.fpga_pps_fpga_time;
+                            FPGA_Time.fpga_pps_mcu_time = Receive_Data.fpga.fpga_pps_mcu_time;
+                            FPGA_Time.gps_pps_fpga_time = Receive_Data.fpga.gps_pps_fpga_time;
+                            
+                            // 计算PPS时间
+                            if(decimalPart > 0.5)
+                                FPGA_Time.gps_pps_time = integerPart + 1;
+                            else
+                                FPGA_Time.gps_pps_time = integerPart;
+
+                            // 发布数据流
+                            FPGA_publisher.publish(FPGA_Time);
+                        }
+                    }
+
+
                     length = 0;
                     return true;
                 }
@@ -1449,6 +1551,9 @@ robot::robot():Power_voltage(0)
     
     // 命令发布者
     Command_publisher = private_nh.advertise<byh_uav::uav_command>("byh_uav/Command", 20);
+
+    // FPGA发布者
+    FPGA_publisher = private_nh.advertise<byh_uav::uav_fpga_time>("byh_uav/FPGA", 20);
 
     // Trigger订阅回调函数设置
     trigger_subscriber = private_nh.subscribe("byh_uav/cmd_frequence", 10, &robot::Cmd_Frequence_Callback, this); 

@@ -1,0 +1,47 @@
+byh_uav_trigger1:
+  ch348_port_name: "/dev/ttyCH9344USB8"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger0"
+  use_way: 1
+
+byh_uav_trigger2:
+  ch348_port_name: "/dev/ttyCH9344USB9"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger1"
+  use_way: 1
+
+byh_uav_trigger3:
+  ch348_port_name: "/dev/ttyCH9344USB10"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger2"
+  use_way: 1
+  
+byh_uav_trigger4:
+  ch348_port_name: "/dev/ttyCH9344USB11"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger3"
+  use_way: 1
+  
+byh_uav_trigger5:
+  ch348_port_name: "/dev/ttyCH9344USB12"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger4"
+  use_way: 1
+  
+byh_uav_trigger6:
+  ch348_port_name: "/dev/ttyCH9344USB13"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger5"
+  use_way: 1
+  
+byh_uav_trigger7:
+  ch348_port_name: "/dev/ttyCH9344USB14"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger6"
+  use_way: 1
+  
+byh_uav_trigger8:
+  ch348_port_name: "/dev/ttyCH9344USB15"
+  ch348_baud_rate: 3000000
+  topic: "/byh_uav/trigger7"
+  use_way: 1

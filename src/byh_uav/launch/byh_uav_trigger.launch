@@ -1,0 +1,13 @@
+<launch>
+
+<!-- 打开节点 byh_uav_trigger -->
+    <rosparam command="load" file="$(find byh_uav_trigger)/config/params.yaml" />
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger1" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger2" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger3" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger4" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger5" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger6" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger7" output="screen"/>
+    <node pkg="byh_uav_trigger" type="byh_uav_trigger" name="byh_uav_trigger8" output="screen"/>
+</launch>

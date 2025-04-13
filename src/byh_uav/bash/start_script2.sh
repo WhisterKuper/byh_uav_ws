@@ -7,6 +7,14 @@ sudo ifconfig eth0 192.168.1.50
 sudo ifconfig eth1 192.168.0.144
 sudo chmod 777 /dev/ttyTHS0
 sudo chmod 777 /dev/ttyACM0
+sudo chmod 777 /dev/ttyCH9344USB8
+sudo chmod 777 /dev/ttyCH9344USB9
+sudo chmod 777 /dev/ttyCH9344USB10
+sudo chmod 777 /dev/ttyCH9344USB11
+sudo chmod 777 /dev/ttyCH9344USB12
+sudo chmod 777 /dev/ttyCH9344USB13
+sudo chmod 777 /dev/ttyCH9344USB14
+sudo chmod 777 /dev/ttyCH9344USB15
 
 sleep 1;
 
@@ -17,6 +25,9 @@ gnome-terminal --tab --title="BYHUAV" -- zsh -c "ulimit -c unlimited && echo cor
 sleep 1 &&
 # PPS同步 开启
 gnome-terminal --tab --title="PPS同步" -- zsh -c "sudo -u root zsh -c \" ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && source /home/kuper/Ros/byh_uav_ws/devel/setup.zsh  && rosrun byh_uav_pps2 byh_uav_pps2 /dev/pps1 \"; exec zsh" && 
+sleep 1 &&
+# 相机触发 开启
+gnome-terminal --tab --title="Trigger" -- zsh -c "ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && source ~/Ros/byh_uav_ws/devel/setup.zsh && roslaunch byh_uav byh_uav_trigger.launch; exec zsh" && 
 # MID360 开启
 # gnome-terminal --tab --title="MID360" -- zsh -c "ulimit -c unlimited && echo core-%e-%p-%t | sudo tee /proc/sys/kernel/core_pattern && sudo ifconfig eth0 192.168.1.50 && roslaunch livox_ros_driver2 rviz_MID360.launch; exec zsh" && 
 # MID70 开启

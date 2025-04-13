@@ -2,6 +2,20 @@
 
 byh_uav::uav_frequence trigger_time;
 
+double refrence_gps_time = 0;
+double refrence_pps_time = 0;
+double refrence_fpga_time = 0;
+double refrence_mcu_time = 0;
+ros::Time refrence_gpu_time;
+
+double last_refrence_gps_time = 0;
+double last_refrence_pps_time = 0;
+double last_refrence_fpga_time = 0;
+double last_refrence_mcu_time = 0;
+ros::Time last_refrence_gpu_time;
+
+bool flag = false;
+
 /** 
  * @author WeiXuan
  * @brief 主函数
@@ -30,9 +44,20 @@ int main(int argc, char** argv)
 // PPS 回调函数
 void robot::PPS_Callback(const byh_uav::uav_pps_all::ConstPtr &pps_time)
 {
-    
+    last_refrence_gps_time = refrence_gps_time;
+    last_refrence_fpga_time = refrence_fpga_time;
+    last_refrence_mcu_time = refrence_mcu_time;
+    last_refrence_gpu_time = refrence_gpu_time;
+    last_refrence_pps_time = refrence_pps_time;
+    flag = true;
+    // 记录时间基石
+    refrence_gps_time = pps_time->gps_pps_time;
+    refrence_fpga_time = pps_time->gps_pps_fpga_time;
+    refrence_mcu_time = pps_time->fpga_pps_mcu_time;
+    refrence_gpu_time = pps_time->fpga_pps_sys_time;
+    refrence_pps_time = pps_time->fpga_pps_fpga_time;
+    flag = false;
 }
-
 
 /** 
  * @author WeiXuan
@@ -190,7 +215,29 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                     trigger_time.count++;
                     trigger_time.number = 1;
 		            trigger_time.header.frame_id = "trigger_time"; 
-                    trigger_time.pulse_mcu_time = fpga_time;
+                    trigger_time.pulse_fpga_time = fpga_time;
+
+                    if(flag == true)
+                    {
+                        double past_time = fpga_time - last_refrence_fpga_time;
+
+                        trigger_time.pulse_gps_time = last_refrence_gps_time + past_time;
+                        trigger_time.pulse_mcu_time = last_refrence_mcu_time + past_time;
+                        
+                        double ros_time = last_refrence_gpu_time.toSec() + past_time;
+                        trigger_time.pulse_gpu_time = ros::Time(ros_time);
+                    }
+                    else
+                    {
+                        double past_time = fpga_time - refrence_fpga_time;
+
+                        trigger_time.pulse_gps_time = refrence_gps_time + past_time;
+                        trigger_time.pulse_mcu_time = refrence_mcu_time + past_time;
+                        
+                        double ros_time = refrence_gpu_time.toSec() + past_time;
+                        trigger_time.pulse_gpu_time = ros::Time(ros_time);
+                    }
+
                     if(channel == 1)
                         trigger_time.name = "1V8_1";
                     else if(channel == 2)

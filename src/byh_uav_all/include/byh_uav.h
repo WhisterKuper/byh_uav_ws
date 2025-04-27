@@ -82,7 +82,7 @@ using namespace std;
 // 与IMU加速度计设置的量程有关
 #define ACCEl_BMI088_RATIO 	        9.80665 / 1365
 #define ACCEl_ADIS16470_RATIO 	    9.80665 / 52428800.0
-#define ACCEl_ADIS16465_RATIO 	    9.80665 / 52428800.0
+#define ACCEl_ADIS16465_RATIO 	    9.80665 / 262141000.0
 #define ACCEl_ICM42688_RATIO 	    9.80665 / 8192
 
 // 与IMU磁力计设置的量程有关

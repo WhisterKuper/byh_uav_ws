@@ -1220,20 +1220,20 @@ bool robot::Get_Sensor_Data( uint8_t sensor_data )
                         if( data_fpga->name == NAME_PPS_FPGA_TIME )
                         {
                             // 收到以前的数据
-                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)D435i.count && D435i.count !=0 )
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 <= (long int)FPGA_Time.count && FPGA_Time.count !=0 )
                             {
                                 return false;
                             }
 
-                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)D435i.count + 1 && D435i.count !=0 )
+                            if( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 != (long int)FPGA_Time.count + 1 && FPGA_Time.count !=0 )
                             {
                                 // 错误过多
-                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)D435i.count, MAX_LOST_COUNT )) != true )
+                                if( (IN_RANGE( Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296, (long int)FPGA_Time.count, MAX_LOST_COUNT )) != true )
                                 {
                                     // return false;
                                 }
                                 if(first == false)
-                                    ROS_WARN("[Lost_Count] FPGA: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - D435i.count - 1, D435i.count);
+                                    ROS_WARN("[Lost_Count] FPGA: %ld, %ld", Receive_Data.sequence[0] + Receive_Data.sequence[1] * 4294967296 - FPGA_Time.count - 1, FPGA_Time.count);
 
                                 if(first == true)
                                     first = false;
